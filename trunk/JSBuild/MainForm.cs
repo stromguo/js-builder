@@ -448,7 +448,8 @@ namespace JSBuild
             folders.SelectedPath = project.ProjectDir.FullName;
             if(folders.ShowDialog(this) == DialogResult.OK)
             {
-                project.AddDirectory(Path.RelativePathTo(project.ProjectDir.FullName, folders.SelectedPath));
+                //project.AddDirectory(Path.RelativePathTo(project.ProjectDir.FullName, folders.SelectedPath));
+				AddSourceDirectory(folders.SelectedPath);
                 LoadFiles();
             }
         }
@@ -590,7 +591,7 @@ namespace JSBuild
                 {
 					try
 					{
-						project.AddDirectory(Path.RelativePathTo(project.ProjectDir.FullName, d.FullName));
+						AddSourceDirectory(d.FullName);
 					}
 					catch (Exception ex)
 					{
@@ -611,5 +612,29 @@ namespace JSBuild
             }
             LoadFiles();
         }
+
+		private void AddSourceDirectory(string sourcePath)
+		{
+			try
+			{
+				project.AddDirectory(Path.RelativePathTo(project.ProjectDir.FullName, sourcePath));
+			}
+			catch (Exception ex)
+			{
+				//HACK: This should not be necessary if we properly support 
+				//adding absolute paths with drive letters
+				if (ex.Message.Contains("different path roots"))
+				{
+					MessageBox.Show("You cannot currently add files located on a different drive.  For example, " +
+						"if your JS Builder project is on C:, you cannot add files from D:.  This will be fixed " +
+						" in a future release.", "JS Builder");
+				}
+				else
+				{
+					MessageBox.Show("The folder(s) could not be added because of the following error: " +
+						ex.ToString(), "JS Builder Error");
+				}
+			}
+		}
     }
 }
