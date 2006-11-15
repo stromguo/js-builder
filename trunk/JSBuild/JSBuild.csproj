@@ -159,10 +159,10 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>copy $(SolutionDir)JSBuild\project.xml $(TargetDir)
-copy $(SolutionDir)JSBuild\shorthand.txt $(TargetDir)
-copy $(SolutionDir)JSBuild\project.xml $(SolutionDir)JSBuildConsole\$(OutDir)
-copy $(SolutionDir)JSBuild\shorthand.txt $(SolutionDir)JSBuildConsole\$(OutDir)
+    <PreBuildEvent>copy "$(SolutionDir)JSBuild\project.xml" "$(TargetDir)"
+copy "$(SolutionDir)JSBuild\shorthand.txt" "$(TargetDir)"
+copy "$(SolutionDir)JSBuild\project.xml" "$(SolutionDir)JSBuildConsole\$(OutDir)"
+copy "$(SolutionDir)JSBuild\shorthand.txt" "$(SolutionDir)JSBuildConsole\$(OutDir)"
 </PreBuildEvent>
   </PropertyGroup>
 </Project>
