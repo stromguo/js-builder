@@ -20,7 +20,7 @@ namespace JSBuild
 				
 				switch (arg.Name)
 				{
-					case Util.CommandLine.AvailableArgs.StartProject:
+					case Util.CommandLine.AvailableArgs.ProjectPath:
 						startProject = arg.Value;
 						break;
 				}
