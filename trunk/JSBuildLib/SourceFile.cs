@@ -41,6 +41,11 @@ namespace JSBuild
             set { file = value; }
         }
 
+        private bool binary;
+        public bool IsBinary
+        {
+            get { return binary; }
+        }
         public String Minified
         {
             get 
@@ -58,16 +63,31 @@ namespace JSBuild
         {
             this.file = file;
             this.pathInfo = pathInfo;
-            StreamReader sr = new StreamReader(file.FullName);
-            source = sr.ReadToEnd();
-            sr.Close();    
+            if(file.Extension == ".gif" || file.Extension == ".jpg" || file.Extension == ".png")
+            {
+                binary = true;
+            }
+            else
+            {
+                binary = false;
+                StreamReader sr = new StreamReader(file.FullName);
+                source = sr.ReadToEnd();
+                sr.Close();
+            }
         }
 
         public void CopyTo(string target)
         {
-            StreamWriter sw = new StreamWriter(target);
-            sw.Write(header + source);
-            sw.Close();
+            if(!binary)
+            {
+                StreamWriter sw = new StreamWriter(target);
+                sw.Write(header + source);
+                sw.Close();
+            }
+            else
+            {
+                this.file.CopyTo(target, true);
+            }
         }
 
         public void MinifyTo(string target)
@@ -105,6 +125,12 @@ namespace JSBuild
                 }
             }
             return classes;
+        }
+
+        public string GetSourceNoComments()
+        {
+            Regex re = new Regex(@"(/\*((.|[\r\n])*?)\*/)|(\/\/.*)", RegexOptions.Compiled | RegexOptions.ECMAScript);
+            return re.Replace(this.source, "");
         }
 
         public List<string> GetCommentBlocks()

@@ -93,7 +93,7 @@ namespace JSBuild
 						DirectoryInfo dir = getDirectory(src + file.PathInfo);
 						file.CopyTo(Util.FixPath(dir.FullName) + file.File.Name);
 					}
-					if (project.Minify)
+					if (project.Minify && !file.IsBinary)
 					{
 						DirectoryInfo buildDir = getDirectory(build + file.PathInfo);
 						file.MinifyTo(Util.FixPath(buildDir.FullName) + file.File.Name.Replace(file.File.Extension, 
@@ -116,7 +116,7 @@ namespace JSBuild
 						string fileList = "";
 						foreach (SourceFile f in files.Values)
 						{
-							fileList += f.File.FullName + " ";
+                            if(!f.IsBinary) { fileList += f.File.FullName + " "; }
 						}
 						DirectoryInfo outDir = getDirectory(doc);
 
@@ -194,10 +194,10 @@ namespace JSBuild
 							dsw.Write(header);
 							foreach (string f in target.Includes)
 							{
-								dsw.Write("\r\n/*\r\n------------------------------------------------------------------\r\n");
-								dsw.Write("// File: " + files[f].PathInfo + "\\" + files[f].File.Name + "\r\n");
-								dsw.Write("------------------------------------------------------------------\r\n*/\r\n");
-								dsw.Write(files[f].Source + "\n");
+								//dsw.Write("\r\n/*\r\n------------------------------------------------------------------\r\n");
+								//dsw.Write("// File: " + files[f].PathInfo + "\\" + files[f].File.Name + "\r\n");
+								//dsw.Write("------------------------------------------------------------------\r\n*/\r\n");
+								dsw.Write(files[f].GetSourceNoComments() + "\n");
 							}
 							dsw.Close();
 						}
