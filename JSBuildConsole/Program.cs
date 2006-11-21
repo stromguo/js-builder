@@ -11,6 +11,7 @@ namespace JSBuild
 		{
 			String projectPath = null;
 			bool displayHelp = false;
+			string invalidArg = "";
 
 			for (int i = 0; i < args.Length; i++)
 			{
@@ -18,7 +19,11 @@ namespace JSBuild
 
 				switch (arg.Name)
 				{
-					case Util.CommandLine.AvailableArgs.ProjectToBuild:
+					case Util.CommandLine.AvailableArgs.INVALID:
+						invalidArg = arg.Value;
+						break;
+
+					case Util.CommandLine.AvailableArgs.ProjectPath:
 						projectPath = arg.Value;
 						break;
 
@@ -33,6 +38,10 @@ namespace JSBuild
 			{
 				// If the help param was supplied, ignore other params
 				DisplayHelp();
+			}
+			else if (invalidArg.Length > 0)
+			{
+				DisplayInvalidArgMsg(invalidArg);
 			}
 			else if (projectPath != null && projectPath.Length > 0)
 			{
@@ -110,6 +119,13 @@ namespace JSBuild
 			Console.Out.WriteLine("You must supply the path to an existing .jsb file created with the JS Builder GUI application (JSBuilder.exe).");
 			Console.Out.WriteLine("\nUsage: JSBuildConsole /p=[full path to .jsb project file]\n");
 			Console.Out.WriteLine(@"Ex:    JSBuildConsole /p=C:\projectdir\myproject.jsb");
+			Wait();
+		}
+
+		static void DisplayInvalidArgMsg(string msg)
+		{
+			Console.Out.WriteLine("\nJS Builder Console could not start:\n\n" + msg);
+			Console.Out.WriteLine("\nUse the /? parameter for additional help.");
 			Wait();
 		}
 

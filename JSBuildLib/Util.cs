@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using Microsoft.Win32;
-//using System.Windows.Forms;
 
 namespace JSBuild
 {
@@ -83,27 +83,78 @@ namespace JSBuild
 
 			public struct AvailableArgs
 			{
-				public const string StartProject = "startproject";
-				public const string ProjectToBuild = "p";
+				public const string INVALID = "invalid";
+				public const string ProjectPath = "p";
 				public const string DisplayHelp = "help";
 				public const string DisplayHelpShort = "?";
+			}
+
+			public static bool IsArgNameValid(string argName)
+			{
+				return (argName == AvailableArgs.ProjectPath
+					|| argName == AvailableArgs.DisplayHelp
+					|| argName == AvailableArgs.DisplayHelpShort);
 			}
 
 			public static Arg ParseArg(string argString)
 			{
 				Arg arg = new Arg();
-				char[] delim = { ':', '=' };
+				char[] delim = {'='};
 				string[] parts = argString.Split(delim, 2);
 
 				if (parts.Length > 0)
 				{
+					// A valid param name was supplied
 					string name = parts[0];
 					if (name.StartsWith("/") || name.StartsWith("-"))
 					{
 						name = name.Substring(1, name.Length - 1);
 					}
-					arg.Name = name;
-					arg.Value = (parts.Length == 2 ? parts[1] : "");
+
+					if (IsArgNameValid(name))
+					{
+						arg.Name = name;
+						arg.Value = (parts.Length == 2 ? parts[1] : "");
+
+						if (arg.Name == AvailableArgs.ProjectPath)
+						{
+							// Make sure the project path is valid
+							arg = GetProjectPathArg(arg.Value);
+						}
+					}
+					else
+					{
+						if (parts.Length == 1)
+						{
+							// There is only one part, so test to see if it is a path
+							// specified with no arg name -- this will be the case for 
+							// shortcuts that store the project path
+							arg = GetProjectPathArg(parts[0]);
+						}
+						else
+						{
+							// An invalid param name was supplied
+							arg.Name = AvailableArgs.INVALID;
+							arg.Value = "Invalid argument: " + argString[0];
+						}
+					}
+				}
+				return arg;
+			}
+
+			private static Arg GetProjectPathArg(string pathValue)
+			{
+				Arg arg = new Arg();
+
+				if (File.Exists(pathValue))
+				{
+					arg.Name = AvailableArgs.ProjectPath;
+					arg.Value = pathValue;
+				}
+				else
+				{
+					arg.Name = AvailableArgs.INVALID;
+					arg.Value = "Path not found: '" + pathValue + "'";
 				}
 				return arg;
 			}
