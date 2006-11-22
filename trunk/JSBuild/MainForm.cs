@@ -156,7 +156,7 @@ namespace JSBuild
 			{
 				if (pattern.Length > 0)
 				{
-					FileInfo[] matches = dir.GetFiles(pattern);
+					FileInfo[] matches = GetFiles(dir, pattern);
 					if (matches.Length > 0)
 					{
 						Array.Resize(ref files, files.Length + matches.Length);
@@ -184,7 +184,7 @@ namespace JSBuild
 					if (remove)
 					{
 						//Old pattern is not in the new filter, so remove matching files
-						FileInfo[] oldFiles = dir.GetFiles(oldPattern);
+						FileInfo[] oldFiles = GetFiles(dir, oldPattern);
 						foreach (FileInfo fi in oldFiles)
 						{
 							project.RemoveFile(project.GetPath(fi.FullName));
@@ -201,6 +201,18 @@ namespace JSBuild
 				dirNode.Nodes.Add(fileNode);
 			}
 			return hasChildren;
+		}
+
+		private FileInfo[] GetFiles(DirectoryInfo dir, string filePattern)
+		{
+			FileInfo[] files = { };
+			try
+			{
+				files = dir.GetFiles(filePattern);
+			}
+			catch { }
+
+			return files;
 		}
 
         private void tbNew_Click(object sender, EventArgs e)
@@ -231,7 +243,13 @@ namespace JSBuild
                 BindFields();
                 bound = true;
             }
+			SetFormCaption();
         }
+
+		private void SetFormCaption()
+		{
+			this.Text = "JS Builder " + Application.ProductVersion + " - [" + project.FileName + "]";
+		}
 
         private void tbOpen_Click(object sender, EventArgs e)
         {
@@ -256,6 +274,7 @@ namespace JSBuild
         {
             project.Save();
             status.Text = "Project saved to " + project.FileName;
+			SetFormCaption();
         }
 
         private void files_AfterSelect(object sender, TreeViewEventArgs e)
@@ -472,9 +491,18 @@ namespace JSBuild
 
         private void btnModifyTarget_Click(object sender, EventArgs e)
         {
-            OutputForm o = new OutputForm(project.GetTarget(targets.SelectedItems[0].Name));
-            o.ShowDialog(this);
-            LoadTargets();
+			Target t = project.GetTarget(targets.SelectedItems[0].Name);
+			if (t == null || t.Includes == null)
+			{
+				MessageBox.Show("The files included in this target no longer match the selected file filter.  Either remove this target or update your file filter in the Options window.",
+					"JS Builder", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			}
+			else
+			{
+				OutputForm o = new OutputForm(t);
+				o.ShowDialog(this);
+				LoadTargets();
+			}
         }
 
         private void btnRemoveTarget_Click(object sender, EventArgs e)
