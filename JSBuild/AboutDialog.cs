@@ -22,10 +22,18 @@ namespace JSBuild
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.textBoxDescription.Text = AssemblyDescription;
+			this.labelAdditional.Text = AdditionalInfo;
         }
 
         #region Assembly Attribute Accessors
 
+		public string AdditionalInfo
+		{
+			get
+			{
+				return "Contributors: Brian Moeskau";
+			}
+		}
         public string AssemblyTitle
         {
             get
@@ -113,7 +121,15 @@ namespace JSBuild
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("iexplore.exe", "http://www.jackslocum.com/");
-        }
+			try
+			{
+				//This will attempt to use the system default browser
+				System.Diagnostics.Process.Start("http://www.jackslocum.com/");
+			}
+			catch
+			{
+				MessageBox.Show("There was a problem starting your web browser.", "JS Builder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
+		}
     }
 }

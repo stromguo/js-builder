@@ -265,7 +265,8 @@ namespace JSBuild
                 FileInfo f = new FileInfo(path + el.GetAttribute("name"));
                 if(f.Exists)
                 {
-                    files.Add(el.GetAttribute("name"), new SourceFile(f, el.GetAttribute("path")));
+                    //files.Add(el.GetAttribute("name"), new SourceFile(f, el.GetAttribute("path")));
+					files.Add(el.GetAttribute("name"), SourceFileFactory.GetSourceFile(f, el.GetAttribute("path")));
                 }
             }
             return files;

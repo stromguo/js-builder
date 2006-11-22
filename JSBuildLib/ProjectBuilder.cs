@@ -81,10 +81,12 @@ namespace JSBuild
 
 				SetProgress(10, "Loading source files...");
 				Dictionary<string, SourceFile> files = project.LoadSourceFiles();
-				int fileValue = 40 / files.Count, fileNumber = 0;
+				int fileValue = (files.Count > 60 ? files.Count / 60 : 60 / files.Count); 
+				int fileNumber = 0;
+
 				foreach (SourceFile file in files.Values)
 				{
-					SetProgress(10 + (fileValue * ++fileNumber), "Compressing file " + (fileNumber) + " of " + files.Count);
+					SetProgress(10 + (fileValue * ++fileNumber), "Building file " + (fileNumber) + " of " + files.Count);
 					RaiseMessage(MessageTypes.Status, "Processing " + file.File.FullName + "...");
 
 					file.Header = header;
@@ -93,11 +95,17 @@ namespace JSBuild
 						DirectoryInfo dir = getDirectory(src + file.PathInfo);
 						file.CopyTo(Util.FixPath(dir.FullName) + file.File.Name);
 					}
-					if (project.Minify && !file.IsBinary)
+
+					DirectoryInfo buildDir = getDirectory(build + file.PathInfo);
+					string target = Util.FixPath(buildDir.FullName) + file.OutputFilename;
+
+					if (project.Minify && file.SupportsSourceParsing)
 					{
-						DirectoryInfo buildDir = getDirectory(build + file.PathInfo);
-						file.MinifyTo(Util.FixPath(buildDir.FullName) + file.File.Name.Replace(file.File.Extension, 
-							Options.GetInstance().OutputSuffix + file.File.Extension));
+						file.MinifyTo(target);
+					}
+					else
+					{
+						file.CopyTo(target);
 					}
 
 					//file.GetCommentBlocks();
@@ -111,12 +119,12 @@ namespace JSBuild
 					}
 					else
 					{
-						SetProgress(65, "Creating JSDoc output...");
+						SetProgress(75, "Creating JSDoc output...");
 
 						string fileList = "";
 						foreach (SourceFile f in files.Values)
 						{
-                            if(!f.IsBinary) { fileList += f.File.FullName + " "; }
+							if (f.SupportsSourceParsing) { fileList += f.File.FullName + " "; }
 						}
 						DirectoryInfo outDir = getDirectory(doc);
 
@@ -140,14 +148,16 @@ namespace JSBuild
 						}
 					}
 				}
-				SetProgress(70, "Loading build targets...");
+				SetProgress(85, "Loading build targets...");
 				List<Target> targets = project.GetTargets(true);
 				if (targets.Count > 0)
 				{
-					int targetValue = 30 / targets.Count, targetNumber = 0;
+					int targetValue = (targets.Count > 10 ? targets.Count / 10 : 10 / targets.Count);
+					int targetNumber = 0;
+
 					foreach (Target target in targets)
 					{
-						SetProgress(70 + (targetValue * ++targetNumber), "Building target " + (targetNumber) + " of " + targets.Count);
+						SetProgress(85 + (targetValue * ++targetNumber), "Building target " + (targetNumber) + " of " + targets.Count);
 						FileInfo fi = new FileInfo(Util.ApplyVars(target.File, outputDir, project));
 						fi.Directory.Create();
 						StreamWriter sw = new StreamWriter(fi.FullName);

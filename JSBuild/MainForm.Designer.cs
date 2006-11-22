@@ -158,14 +158,14 @@ namespace JSBuild
             this.toolStripSeparator3,
             this.mnExit});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(32, 20);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
 			this.fileToolStripMenuItem.Text = "File";
 			// 
 			// mnNew
 			// 
 			this.mnNew.Image = ((System.Drawing.Image)(resources.GetObject("mnNew.Image")));
 			this.mnNew.Name = "mnNew";
-			this.mnNew.Size = new System.Drawing.Size(149, 22);
+			this.mnNew.Size = new System.Drawing.Size(160, 22);
 			this.mnNew.Text = "New Project";
 			this.mnNew.Click += new System.EventHandler(this.tbNew_Click);
 			// 
@@ -173,33 +173,33 @@ namespace JSBuild
 			// 
 			this.mnOpen.Image = ((System.Drawing.Image)(resources.GetObject("mnOpen.Image")));
 			this.mnOpen.Name = "mnOpen";
-			this.mnOpen.Size = new System.Drawing.Size(149, 22);
+			this.mnOpen.Size = new System.Drawing.Size(160, 22);
 			this.mnOpen.Text = "Open Project...";
 			this.mnOpen.Click += new System.EventHandler(this.tbOpen_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(146, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(157, 6);
 			// 
 			// mnSave
 			// 
 			this.mnSave.Enabled = false;
 			this.mnSave.Image = ((System.Drawing.Image)(resources.GetObject("mnSave.Image")));
 			this.mnSave.Name = "mnSave";
-			this.mnSave.Size = new System.Drawing.Size(149, 22);
+			this.mnSave.Size = new System.Drawing.Size(160, 22);
 			this.mnSave.Text = "Save Project...";
 			this.mnSave.Click += new System.EventHandler(this.tbSave_Click);
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(146, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(157, 6);
 			// 
 			// mnExit
 			// 
 			this.mnExit.Name = "mnExit";
-			this.mnExit.Size = new System.Drawing.Size(149, 22);
+			this.mnExit.Size = new System.Drawing.Size(160, 22);
 			this.mnExit.Text = "Exit";
 			this.mnExit.Click += new System.EventHandler(this.mnExit_Click);
 			// 
@@ -209,7 +209,7 @@ namespace JSBuild
             this.mnBuild,
             this.mnOptions});
 			this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-			this.buildToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+			this.buildToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
 			this.buildToolStripMenuItem.Text = "Build";
 			// 
 			// mnBuild
@@ -217,13 +217,13 @@ namespace JSBuild
 			this.mnBuild.Enabled = false;
 			this.mnBuild.Image = ((System.Drawing.Image)(resources.GetObject("mnBuild.Image")));
 			this.mnBuild.Name = "mnBuild";
-			this.mnBuild.Size = new System.Drawing.Size(137, 22);
+			this.mnBuild.Size = new System.Drawing.Size(144, 22);
 			this.mnBuild.Text = "Build Project";
 			// 
 			// mnOptions
 			// 
 			this.mnOptions.Name = "mnOptions";
-			this.mnOptions.Size = new System.Drawing.Size(137, 22);
+			this.mnOptions.Size = new System.Drawing.Size(144, 22);
 			this.mnOptions.Text = "Options...";
 			this.mnOptions.Click += new System.EventHandler(this.tbOptions_Click);
 			// 
@@ -233,21 +233,21 @@ namespace JSBuild
             this.mnWebSite,
             this.mnAbout});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
 			this.helpToolStripMenuItem.Text = "Help";
 			// 
 			// mnWebSite
 			// 
 			this.mnWebSite.Image = ((System.Drawing.Image)(resources.GetObject("mnWebSite.Image")));
 			this.mnWebSite.Name = "mnWebSite";
-			this.mnWebSite.Size = new System.Drawing.Size(179, 22);
+			this.mnWebSite.Size = new System.Drawing.Size(187, 22);
 			this.mnWebSite.Text = "www.jackslocum.com";
 			this.mnWebSite.Click += new System.EventHandler(this.mnWebSite_Click);
 			// 
 			// mnAbout
 			// 
 			this.mnAbout.Name = "mnAbout";
-			this.mnAbout.Size = new System.Drawing.Size(179, 22);
+			this.mnAbout.Size = new System.Drawing.Size(187, 22);
 			this.mnAbout.Text = "About JSBuild";
 			this.mnAbout.Click += new System.EventHandler(this.mnAbout_Click);
 			// 
@@ -862,26 +862,26 @@ namespace JSBuild
             this.toolStripSeparator4,
             this.mnAdd});
 			this.filesCtx.Name = "filesCtx";
-			this.filesCtx.Size = new System.Drawing.Size(149, 54);
+			this.filesCtx.Size = new System.Drawing.Size(158, 54);
 			// 
 			// mnRemove
 			// 
 			this.mnRemove.Image = ((System.Drawing.Image)(resources.GetObject("mnRemove.Image")));
 			this.mnRemove.Name = "mnRemove";
-			this.mnRemove.Size = new System.Drawing.Size(148, 22);
+			this.mnRemove.Size = new System.Drawing.Size(157, 22);
 			this.mnRemove.Text = "Remove Folder";
 			this.mnRemove.Click += new System.EventHandler(this.tbRemoveFolder_Click);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(145, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(154, 6);
 			// 
 			// mnAdd
 			// 
 			this.mnAdd.Image = ((System.Drawing.Image)(resources.GetObject("mnAdd.Image")));
 			this.mnAdd.Name = "mnAdd";
-			this.mnAdd.Size = new System.Drawing.Size(148, 22);
+			this.mnAdd.Size = new System.Drawing.Size(157, 22);
 			this.mnAdd.Text = "Add Folder";
 			this.mnAdd.Click += new System.EventHandler(this.tbFolder_Click);
 			// 
@@ -1033,7 +1033,7 @@ namespace JSBuild
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(600, 515);
 			this.Name = "MainForm";
-			this.Text = "JS Builder 1.0";
+			this.Text = "JS Builder";
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.menu.ResumeLayout(false);
 			this.menu.PerformLayout();
