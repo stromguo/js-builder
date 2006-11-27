@@ -81,12 +81,13 @@ namespace JSBuild
 
 				SetProgress(10, "Loading source files...");
 				Dictionary<string, SourceFile> files = project.LoadSourceFiles();
-				int fileValue = (files.Count > 60 ? files.Count / 60 : 60 / files.Count); 
+				float fileValue = 60.0f / (files.Count > 0 ? files.Count : 1); 
 				int fileNumber = 0;
 
 				foreach (SourceFile file in files.Values)
 				{
-					SetProgress(10 + (fileValue * ++fileNumber), "Building file " + (fileNumber) + " of " + files.Count);
+					int pct = (int)(fileValue * ++fileNumber);
+					SetProgress(10 + pct, "Building file " + (fileNumber) + " of " + files.Count);
 					RaiseMessage(MessageTypes.Status, "Processing " + file.File.FullName + "...");
 
 					file.Header = header;
@@ -152,12 +153,13 @@ namespace JSBuild
 				List<Target> targets = project.GetTargets(true);
 				if (targets.Count > 0)
 				{
-					int targetValue = (targets.Count > 10 ? targets.Count / 10 : 10 / targets.Count);
+					float targetValue = 10.0f / (targets.Count > 0 ? targets.Count : 1);
 					int targetNumber = 0;
 
 					foreach (Target target in targets)
 					{
-						SetProgress(85 + (targetValue * ++targetNumber), "Building target " + (targetNumber) + " of " + targets.Count);
+						int pct = (int)(targetValue * ++targetNumber);
+						SetProgress(85 + pct, "Building target " + (targetNumber) + " of " + targets.Count);
 						FileInfo fi = new FileInfo(Util.ApplyVars(target.File, outputDir, project));
 						fi.Directory.Create();
 						StreamWriter sw = new StreamWriter(fi.FullName);
