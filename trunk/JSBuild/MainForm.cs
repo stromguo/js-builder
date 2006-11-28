@@ -50,6 +50,7 @@ namespace JSBuild
 
 			ProjectBuilder.ProgressUpdate += new ProgressDelegate(ProjectBuilder_ProgressUpdated);
 			ProjectBuilder.MessageAvailable += new MessageDelegate(ProjectBuilder_MessageAvailable);
+			ProjectBuilder.BuildComplete += new BuildCompleteDelegate(ProjectBuilder_BuildComplete);
         }
 
         private void BindFields()
@@ -382,18 +383,25 @@ namespace JSBuild
 
 		private void Build()
 		{
-			ProjectBuilder.Build(project);
+			try
+			{
+				ProjectBuilder.Build(project);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("An unhandled exception occurred while building:\n" + ex.ToString(), 
+					"JS Builder Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				status.Text = "Build failed";
+				this.Invoke(new ProgressForm.CloseDelegate(pform.Close));
+			}
 		}
+
+		#region ProjectBuilder event handlers
 
 		void ProjectBuilder_ProgressUpdated(ProgressInfo progressInfo)
 		{
 			ProgressForm.SetValueDelegate d = new ProgressForm.SetValueDelegate(pform.SetValues);
 			this.Invoke(d, progressInfo.Percent, progressInfo.Message);
-
-			if (progressInfo.Percent >= 100)
-			{
-				this.Invoke(new ProgressForm.CloseDelegate(pform.Close));
-			}
 		}
 
 		void ProjectBuilder_MessageAvailable(Message message)
@@ -416,7 +424,14 @@ namespace JSBuild
 			}
 		}
 
-        private void tbBuild_Click(object sender, EventArgs e)
+		void ProjectBuilder_BuildComplete()
+		{
+			status.Text = "Build completed successfully!";
+			this.Invoke(new ProgressForm.CloseDelegate(pform.Close));
+		}
+		#endregion
+		
+		private void tbBuild_Click(object sender, EventArgs e)
         {
             if(project.SelectedFiles.Count < 1)
             {
@@ -429,10 +444,9 @@ namespace JSBuild
             Thread t = new Thread(new ThreadStart(Build));
             t.Start();
             pform.ShowDialog(this);
-        }
+		}
 
-
-        private void tbOptions_Click(object sender, EventArgs e)
+		private void tbOptions_Click(object sender, EventArgs e)
         {
             OptionsForm o = new OptionsForm();
             o.ShowDialog(this);

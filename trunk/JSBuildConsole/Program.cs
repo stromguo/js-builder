@@ -7,6 +7,8 @@ namespace JSBuild
 {
 	class Program
 	{
+		static bool verbose = false;
+
 		static void Main(string[] args)
 		{
 			String projectPath = null;
@@ -25,6 +27,10 @@ namespace JSBuild
 
 					case Util.CommandLine.AvailableArgs.ProjectPath:
 						projectPath = arg.Value;
+						break;
+
+					case Util.CommandLine.AvailableArgs.VerboseOutput:
+						verbose = true;
 						break;
 
 					case Util.CommandLine.AvailableArgs.DisplayHelp:
@@ -53,6 +59,10 @@ namespace JSBuild
 				{
 					Console.Out.WriteLine("\nBUILD FAILED!\n" + ex.ToString());
 					Wait();
+
+					// Exit with a negative return code so that external apps like NAnt 
+					// can interpret the build as unsuccessful
+					Environment.Exit(-99);
 				}
 			}
 			else
@@ -78,17 +88,24 @@ namespace JSBuild
 
 			ProjectBuilder.MessageAvailable += new MessageDelegate(ProjectBuilder_MessageAvailable);
 			ProjectBuilder.ProgressUpdate += new ProgressDelegate(ProjectBuilder_ProgressUpdate);
+			ProjectBuilder.BuildComplete += new BuildCompleteDelegate(ProjectBuilder_BuildComplete);
 
 			Project project = Project.GetInstance();
 			project.Load(appExePath, projectPath);
 
 			ProjectBuilder.Build(project);
+
 			Wait();
+		}
+
+		static void ProjectBuilder_BuildComplete()
+		{
+			Console.Out.WriteLine("\nBuild completed successfully!");
 		}
 
 		static void ProjectBuilder_ProgressUpdate(ProgressInfo progressInfo)
 		{
-			Console.Out.WriteLine(progressInfo.Message);
+			if (verbose) Console.Out.WriteLine(progressInfo.Message);
 		}
 
 		static void ProjectBuilder_MessageAvailable(Message message)
@@ -96,15 +113,16 @@ namespace JSBuild
 			switch (message.Type)
 			{
 				case MessageTypes.Info:
-					Console.Out.WriteLine("INFO: " + message.Text);
+					if (verbose) Console.Out.WriteLine("INFO: " + message.Text);
 					break;
 
 				case MessageTypes.Error:
+					// Always write errors even if verbose = false
 					Console.Out.WriteLine("\nBUILD FAILED!\n" + message.Text);
 					break;
 
 				case MessageTypes.Status:
-					Console.Out.WriteLine(message.Text);
+					if (verbose) Console.Out.WriteLine(message.Text);
 					break;
 			}
 		}
@@ -131,12 +149,15 @@ namespace JSBuild
 
 		static void Wait()
 		{
-			#if DEBUG
-			// Pause here so we can verify the output.  Only pause in debug mode
-			// so we don't interfere with automated builds.
-			Console.Out.WriteLine("\nPress ENTER to continue...");
-			Console.ReadLine();
-			#endif
+			if (false)
+			{
+				// Pause here so we can verify the output.  This hard-coded flag should be set to
+				// true when debugging in Visual Studio, otherwise leave it false.  Originally I had this
+				// as a #DEBUG conditional, but we commonly release Debug builds right now, and we don't want
+				// this code executing for someone who's not actively debugging the console.
+				Console.Out.WriteLine("\nPress ENTER to continue...");
+				Console.ReadLine();
+			}
 		}
 	}
 }

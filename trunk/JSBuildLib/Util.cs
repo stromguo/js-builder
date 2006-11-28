@@ -83,8 +83,11 @@ namespace JSBuild
 
 			public struct AvailableArgs
 			{
+				//NOTE: If you add a new arg here, add it to IsArgNameValid also
+
 				public const string INVALID = "invalid";
-				public const string ProjectPath = "p";
+				public const string ProjectPath = "path";
+				public const string VerboseOutput = "verbose";
 				public const string DisplayHelp = "help";
 				public const string DisplayHelpShort = "?";
 			}
@@ -92,6 +95,7 @@ namespace JSBuild
 			public static bool IsArgNameValid(string argName)
 			{
 				return (argName == AvailableArgs.ProjectPath
+					|| argName == AvailableArgs.VerboseOutput
 					|| argName == AvailableArgs.DisplayHelp
 					|| argName == AvailableArgs.DisplayHelpShort);
 			}

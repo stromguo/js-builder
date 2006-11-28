@@ -50,183 +50,191 @@ namespace JSBuild
 
 	#endregion
 
+	#region BuildComplete
+
+	public delegate void BuildCompleteDelegate();
+
+	#endregion
+
 	#endregion
 
 	#region ProjectBuilder class
 	public static class ProjectBuilder
 	{
 		public static event ProgressDelegate ProgressUpdate;
-
 		public static event MessageDelegate MessageAvailable;
+		public static event BuildCompleteDelegate BuildComplete;
 
 		static public void Build(Project project)
 		{
-			try
+			// NOTE: Make sure that we DO throw any errors that might occur here
+			// and defer handling to the caller.  The console app must be allowed
+			// to catch errors so that it can exit unsuccessfully.
+
+			SetProgress(1, "Initializing...");
+			string projectDir = Util.FixPath(project.ProjectDir.FullName);
+			string outputDir = Util.FixPath(project.Output);
+			
+			//Fix for default '$project\build' get rendered literally:
+			outputDir = outputDir.Replace("$project", projectDir);
+
+			string header = Util.ApplyVars(project.Copyright, outputDir, project);
+			if (header.Length > 0)
 			{
-				SetProgress(1, "Initializing...");
-				string projectDir = Util.FixPath(project.ProjectDir.FullName);
-				string outputDir = Util.FixPath(project.Output);
-				
-				//Fix for default '$project\build' get rendered literally:
-				outputDir = outputDir.Replace("$project", projectDir);
+				header = "/*\r\n * " + header.Replace("\n", "\n * ") + "\r\n */\r\n\r\n";
+			}
+			string build = Util.FixPath(Util.ApplyVars(project.MinDir, outputDir, project));
+			string src = Util.FixPath(Util.ApplyVars(project.SourceDir, outputDir, project));
+			string doc = Util.FixPath(Util.ApplyVars(project.DocDir, outputDir, project));
 
-				string header = Util.ApplyVars(project.Copyright, outputDir, project);
-				if (header.Length > 0)
+			SetProgress(10, "Loading source files...");
+			Dictionary<string, SourceFile> files = project.LoadSourceFiles();
+			float fileValue = 60.0f / (files.Count > 0 ? files.Count : 1); 
+			int fileNumber = 0;
+
+			foreach (SourceFile file in files.Values)
+			{
+				int pct = (int)(fileValue * ++fileNumber);
+				SetProgress(10 + pct, "Building file " + (fileNumber) + " of " + files.Count);
+				RaiseMessage(MessageTypes.Status, "Processing " + file.File.FullName + "...");
+
+				file.Header = header;
+				if (project.Source)
 				{
-					header = "/*\r\n * " + header.Replace("\n", "\n * ") + "\r\n */\r\n\r\n";
+					DirectoryInfo dir = getDirectory(src + file.PathInfo);
+					file.CopyTo(Util.FixPath(dir.FullName) + file.File.Name);
 				}
-				string build = Util.FixPath(Util.ApplyVars(project.MinDir, outputDir, project));
-				string src = Util.FixPath(Util.ApplyVars(project.SourceDir, outputDir, project));
-				string doc = Util.FixPath(Util.ApplyVars(project.DocDir, outputDir, project));
 
-				SetProgress(10, "Loading source files...");
-				Dictionary<string, SourceFile> files = project.LoadSourceFiles();
-				float fileValue = 60.0f / (files.Count > 0 ? files.Count : 1); 
-				int fileNumber = 0;
+				DirectoryInfo buildDir = getDirectory(build + file.PathInfo);
+				string target = Util.FixPath(buildDir.FullName) + file.OutputFilename;
 
-				foreach (SourceFile file in files.Values)
+				if (project.Minify && file.SupportsSourceParsing)
 				{
-					int pct = (int)(fileValue * ++fileNumber);
-					SetProgress(10 + pct, "Building file " + (fileNumber) + " of " + files.Count);
-					RaiseMessage(MessageTypes.Status, "Processing " + file.File.FullName + "...");
-
-					file.Header = header;
-					if (project.Source)
-					{
-						DirectoryInfo dir = getDirectory(src + file.PathInfo);
-						file.CopyTo(Util.FixPath(dir.FullName) + file.File.Name);
-					}
-
-					DirectoryInfo buildDir = getDirectory(build + file.PathInfo);
-					string target = Util.FixPath(buildDir.FullName) + file.OutputFilename;
-
-					if (project.Minify && file.SupportsSourceParsing)
-					{
-						file.MinifyTo(target);
-					}
-					else
-					{
-						file.CopyTo(target);
-					}
-
-					//file.GetCommentBlocks();
+					file.MinifyTo(target);
 				}
-				bool jsdocSkipped = false;
-				if (project.Doc)
+				else
 				{
-					if (Options.GetInstance().JsdocPath.Length < 1 || !new FileInfo(Options.GetInstance().JsdocPath).Exists)
+					file.CopyTo(target);
+				}
+
+				//file.GetCommentBlocks();
+			}
+
+			bool jsdocSkipped = false;
+			if (project.Doc)
+			{
+				if (Options.GetInstance().JsdocPath.Length < 1 || !new FileInfo(Options.GetInstance().JsdocPath).Exists)
+				{
+					jsdocSkipped = true;
+				}
+				else
+				{
+					SetProgress(75, "Creating JSDoc output...");
+
+					string fileList = "";
+					foreach (SourceFile f in files.Values)
+					{
+						if (f.SupportsSourceParsing) { fileList += f.File.FullName + " "; }
+					}
+					DirectoryInfo outDir = getDirectory(doc);
+
+					string args = GetJsdocPath() + Options.GetInstance().JsdocArgs.Replace("$docPath", outDir.FullName);
+					args = args.Replace("$files", fileList);
+
+					Process p = new Process();
+					p.EnableRaisingEvents = false;
+					ProcessStartInfo info = new ProcessStartInfo("perl.exe", args);
+					info.CreateNoWindow = true;
+					info.UseShellExecute = false;
+					p.StartInfo = info;
+					try
+					{
+						p.Start();
+						p.WaitForExit();
+					}
+					catch (Exception e)
 					{
 						jsdocSkipped = true;
 					}
+				}
+			}
+			SetProgress(85, "Loading build targets...");
+			List<Target> targets = project.GetTargets(true);
+			if (targets.Count > 0)
+			{
+				float targetValue = 10.0f / (targets.Count > 0 ? targets.Count : 1);
+				int targetNumber = 0;
+
+				foreach (Target target in targets)
+				{
+					int pct = (int)(targetValue * ++targetNumber);
+					SetProgress(85 + pct, "Building target " + (targetNumber) + " of " + targets.Count);
+					FileInfo fi = new FileInfo(Util.ApplyVars(target.File, outputDir, project));
+					fi.Directory.Create();
+					StreamWriter sw = new StreamWriter(fi.FullName);
+					sw.Write(header);
+					if (!target.Shorthand)
+					{
+						foreach (string f in target.Includes)
+						{
+							sw.Write(files[f].Minified + "\n");
+						}
+					}
 					else
 					{
-						SetProgress(75, "Creating JSDoc output...");
-
-						string fileList = "";
-						foreach (SourceFile f in files.Values)
+						string[] sh = target.ParseList();
+						StringBuilder fcn = new StringBuilder();
+						fcn.Append("(function(){");
+						int index = 0;
+						foreach (string s in sh)
 						{
-							if (f.SupportsSourceParsing) { fileList += f.File.FullName + " "; }
+							fcn.AppendFormat("var _{0} = {1};", ++index, s);
 						}
-						DirectoryInfo outDir = getDirectory(doc);
-
-						string args = GetJsdocPath() + Options.GetInstance().JsdocArgs.Replace("$docPath", outDir.FullName);
-						args = args.Replace("$files", fileList);
-
-						Process p = new Process();
-						p.EnableRaisingEvents = false;
-						ProcessStartInfo info = new ProcessStartInfo("perl.exe", args);
-						info.CreateNoWindow = true;
-						info.UseShellExecute = false;
-						p.StartInfo = info;
-						try
+						sw.Write(fcn.Append("\n"));
+						foreach (string f in target.Includes)
 						{
-							p.Start();
-							p.WaitForExit();
-						}
-						catch (Exception e)
-						{
-							jsdocSkipped = true;
-						}
-					}
-				}
-				SetProgress(85, "Loading build targets...");
-				List<Target> targets = project.GetTargets(true);
-				if (targets.Count > 0)
-				{
-					float targetValue = 10.0f / (targets.Count > 0 ? targets.Count : 1);
-					int targetNumber = 0;
-
-					foreach (Target target in targets)
-					{
-						int pct = (int)(targetValue * ++targetNumber);
-						SetProgress(85 + pct, "Building target " + (targetNumber) + " of " + targets.Count);
-						FileInfo fi = new FileInfo(Util.ApplyVars(target.File, outputDir, project));
-						fi.Directory.Create();
-						StreamWriter sw = new StreamWriter(fi.FullName);
-						sw.Write(header);
-						if (!target.Shorthand)
-						{
-							foreach (string f in target.Includes)
-							{
-								sw.Write(files[f].Minified + "\n");
-							}
-						}
-						else
-						{
-							string[] sh = target.ParseList();
-							StringBuilder fcn = new StringBuilder();
-							fcn.Append("(function(){");
-							int index = 0;
+							string min = files[f].Minified;
+							index = 0;
 							foreach (string s in sh)
 							{
-								fcn.AppendFormat("var _{0} = {1};", ++index, s);
+								min = min.Replace(s, "_" + index);
 							}
-							sw.Write(fcn.Append("\n"));
-							foreach (string f in target.Includes)
-							{
-								string min = files[f].Minified;
-								index = 0;
-								foreach (string s in sh)
-								{
-									min = min.Replace(s, "_" + index);
-								}
-								sw.Write(min + "\n");
-							}
-							sw.Write("})();");
+							sw.Write(min + "\n");
 						}
-						sw.Close();
-						if (target.Debug)
+						sw.Write("})();");
+					}
+					sw.Close();
+					if (target.Debug)
+					{
+						string filename = fi.FullName;
+						if (fi.Extension == ".js")
 						{
-							string filename = fi.FullName;
-							if (fi.Extension == ".js")
-							{
-								filename = fi.FullName.Substring(0, fi.FullName.Length - 3) + "-debug.js";
-							}
-							StreamWriter dsw = new StreamWriter(filename);
-							dsw.Write(header);
-							foreach (string f in target.Includes)
-							{
-								//dsw.Write("\r\n/*\r\n------------------------------------------------------------------\r\n");
-								//dsw.Write("// File: " + files[f].PathInfo + "\\" + files[f].File.Name + "\r\n");
-								//dsw.Write("------------------------------------------------------------------\r\n*/\r\n");
-								dsw.Write(files[f].GetSourceNoComments() + "\n");
-							}
-							dsw.Close();
+							filename = fi.FullName.Substring(0, fi.FullName.Length - 3) + "-debug.js";
 						}
+						StreamWriter dsw = new StreamWriter(filename);
+						dsw.Write(header);
+						foreach (string f in target.Includes)
+						{
+							//dsw.Write("\r\n/*\r\n------------------------------------------------------------------\r\n");
+							//dsw.Write("// File: " + files[f].PathInfo + "\\" + files[f].File.Name + "\r\n");
+							//dsw.Write("------------------------------------------------------------------\r\n*/\r\n");
+							dsw.Write(files[f].GetSourceNoComments() + "\n");
+						}
+						dsw.Close();
 					}
 				}
-				if (jsdocSkipped)
-				{
-					RaiseMessage(MessageTypes.Info, "JSDoc was skipped because the path to JSDoc (" + Options.GetInstance().JsdocPath +
-						") is invalid or perl.exe was not found.\nYou can change the path by selecting Build->Options and entering a new path.");
-				}
-
-				RaiseMessage(MessageTypes.Status, "Build completed successfully!");
-				SetProgress(100, "Done");
 			}
-			catch (Exception ex)
+			if (jsdocSkipped)
 			{
-				RaiseMessage(MessageTypes.Error, "The build has failed due to the following error:\n" + ex.ToString());
+				RaiseMessage(MessageTypes.Info, "JSDoc was skipped because the path to JSDoc (" + Options.GetInstance().JsdocPath +
+					") is invalid or perl.exe was not found.\nYou can change the path by selecting Build->Options and entering a new path.");
+			}
+
+			SetProgress(100, "Done");
+
+			if (BuildComplete != null)
+			{
+				BuildComplete();
 			}
 		}
 
