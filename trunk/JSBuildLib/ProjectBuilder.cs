@@ -209,6 +209,7 @@ namespace JSBuild
 						string filename = fi.FullName;
 						if (fi.Extension == ".js")
 						{
+							//Only rename to -debug for javascript files
 							filename = fi.FullName.Substring(0, fi.FullName.Length - 3) + "-debug.js";
 						}
 						StreamWriter dsw = new StreamWriter(filename);
