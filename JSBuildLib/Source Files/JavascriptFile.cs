@@ -30,16 +30,9 @@ namespace JSBuild
 		public override void MinifyTo(string target)
 		{
 			base.minfile = target;
-			new JSMin().Minify(base.file.FullName, target);
-
-			using (StreamReader sr = new StreamReader(target))
-			{
-				base.minified = sr.ReadToEnd();
-				sr.Close();
-			}
 			using (StreamWriter sw = new StreamWriter(target))
 			{
-				sw.Write(base.header + base.minified);
+				sw.Write(base.header + this.Minified);
 				sw.Close();
 			}
 		}

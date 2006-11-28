@@ -9,16 +9,35 @@ namespace JSBuild
 	{
 		public CssFile(FileInfo file, string pathInfo) : base(file, pathInfo) { }
 
-		public override string OutputFilename
+		public override bool SupportsSourceParsing
 		{
-			//TODO: This is temporary -- even though CSS files do not currently get parsed,
-			// we still want to return the filename with the -min suffix so that once css parsing
-			// is implemented the output file handling will not have to change.  To be removed once
-			// source parsing is implemented.
+			get { return true; }
+		}
+
+		public override string Minified
+		{
 			get
 			{
-				return this.file.Name.Replace(base.file.Extension,
-					Options.GetInstance().OutputSuffix + base.file.Extension);
+				if (base.minified == null)
+				{
+					// TODO: Replace with real minimizing code
+					base.minified = base.GetSourceNoComments();
+				}
+				return base.minified;
+			}
+			set
+			{
+				base.Minified = value;
+			}
+		}
+
+		public override void MinifyTo(string target)
+		{
+			base.minfile = target;
+			using (StreamWriter sw = new StreamWriter(target))
+			{
+				sw.Write(base.header + this.Minified);
+				sw.Close();
 			}
 		}
 	}
