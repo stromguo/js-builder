@@ -139,7 +139,7 @@ namespace JSBuild
 						{
 							// An invalid param name was supplied
 							arg.Name = AvailableArgs.INVALID;
-							arg.Value = "Invalid argument: " + argString[0];
+							arg.Value = "Unrecognized argument: " + argString[0];
 						}
 					}
 				}
@@ -158,7 +158,7 @@ namespace JSBuild
 				else
 				{
 					arg.Name = AvailableArgs.INVALID;
-					arg.Value = "Path not found: '" + pathValue + "'";
+					arg.Value = "Unrecognized argument: '" + pathValue + "'";
 				}
 				return arg;
 			}

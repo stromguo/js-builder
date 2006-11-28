@@ -131,13 +131,18 @@ namespace JSBuild
 		{
 			Console.Out.WriteLine("\nJS Builder Console " + 
 				System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() +
-				" by Jack Slocum (www.jackslocum.com)");
+				"\nby Jack Slocum (http://www.jackslocum.com)");
 
-			Console.Out.WriteLine("\nThe JS Builder Console performs silent builds of JS Builder project files.  ");
-			Console.Out.WriteLine("You must supply the path to an existing .jsb file created with the JS Builder GUI application (JSBuilder.exe).");
-			Console.Out.WriteLine("\nUsage: JSBuildConsole /p=[full path to .jsb project file]\n");
-			Console.Out.WriteLine(@"Ex:    JSBuildConsole /p=C:\projectdir\myproject.jsb");
+			Console.Out.WriteLine("\nThe JS Builder Console performs command line builds of JS Builder");
+			Console.Out.WriteLine("project files.  You must supply the path to an existing .jsb file");
+			Console.Out.WriteLine("created with the JS Builder GUI application (JSBuilder.exe).");
+			Console.Out.WriteLine("\nUsage   :  JSBuildConsole /path=<.jsb file path> [options]");
+			Console.Out.WriteLine("Options :");
+			Console.Out.WriteLine("\n   /verbose       Display informational logging during build.");
+			Console.Out.WriteLine("                  If omitted, errors will still be displayed.");
+			Console.Out.WriteLine("\n"+@"Example : JSBuildConsole /path=C:\projectdir\myproject.jsb /verbose");
 			Wait();
+			Environment.Exit(-99);
 		}
 
 		static void DisplayInvalidArgMsg(string msg)
@@ -145,6 +150,7 @@ namespace JSBuild
 			Console.Out.WriteLine("\nJS Builder Console could not start:\n\n" + msg);
 			Console.Out.WriteLine("\nUse the /? parameter for additional help.");
 			Wait();
+			Environment.Exit(-99);
 		}
 
 		static void Wait()
