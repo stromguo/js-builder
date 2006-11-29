@@ -98,58 +98,78 @@ namespace JSBuild
             LoadTargets();
         }
 
-        private void LoadTargets()
-        {
-            List<Target> ts = project.GetTargets(false);
-            targets.BeginUpdate();
-            targets.Items.Clear();
-            foreach(Target t in ts)
-            {
-                targets.Items.Add(t.Name, t.Name, 9).SubItems.Add(t.File);
-            }
-            targets.EndUpdate();
-            btnRemoveTarget.Enabled = btnCopy.Enabled = btnModifyTarget.Enabled = (targets.SelectedItems.Count > 0);
-        }
-
         private bool LoadDir(TreeNode parent, DirectoryInfo dir, bool fullName, DirectoryInfo root)
         {
             if(filter.IsMatch(Util.FixPath(dir.FullName)) || filter.IsMatch(Util.FixPath(dir.Name)))
             {
-                return false;
+				return false;
             }
+
             TreeNode dirNode = new FileNode(fullName ? dir.FullName : dir.Name, 1, dir.FullName, dir, root);
-
-            Boolean hasChildren = false;
-
             DirectoryInfo[] childDirs = dir.GetDirectories();
+			bool allSubdirsChecked = true;
+
             foreach(DirectoryInfo d in childDirs)
             {
-                if(LoadDir(dirNode, d, false, root))
-                {
-                    hasChildren = true;
-                }
+				allSubdirsChecked &= LoadDir(dirNode, d, false, root);
             }
 
-			hasChildren |= LoadFiles(dir, root, dirNode);
-            
-			if(hasChildren)
-            {
-                if(parent == null)
-                {
-                    files.Nodes.Add(dirNode);
-                    dirNode.Expand();
-                }
-                else
-                {
-                    parent.Nodes.Add(dirNode);
-                }
-            }
-            return hasChildren;
+			TreeDirectoryInfo tdInfo = LoadFiles(dir, root, dirNode);
+			if (tdInfo.fileCount > 0)
+			{
+				dirNode.Checked = (allSubdirsChecked && tdInfo.allFilesSelected);
+				if (!tdInfo.allFilesSelected && tdInfo.selectedFileCount > 0)
+				{
+					// expand the node automatically if some, but not all, files are 
+					// checked since the tree node will be unchecked but will still 
+					// contain checked files.
+					dirNode.Expand();
+				}
+			}
+			else
+			{
+				dirNode.Checked = allSubdirsChecked;
+			}
+
+			foreach (TreeNode node in dirNode.Nodes)
+			{
+				if (node.IsExpanded)
+				{
+					// if a child node is expanded, then assume that it already has at least one
+					// selected file in the hierarchy.  Even if there are no selected files
+					// at this level in the tree, we still want to expand to show nested selections.
+					dirNode.Expand();
+					break;
+				}
+			}
+
+			if (parent == null)
+			{
+				files.Nodes.Add(dirNode);
+				// always expand the root node
+				dirNode.Expand();
+			}
+			else
+			{
+				parent.Nodes.Add(dirNode);
+			}
+
+			return dirNode.Checked;
         }
 
-		private Boolean LoadFiles(DirectoryInfo dir, DirectoryInfo root, TreeNode dirNode)
+		private class TreeDirectoryInfo
 		{
-			Boolean hasChildren = false;
+			internal int fileCount = 0;
+			internal int selectedFileCount = 0;
+			internal bool allFilesSelected
+			{
+				get { return fileCount == selectedFileCount; }
+			}
+		}
+
+		private TreeDirectoryInfo LoadFiles(DirectoryInfo dir, DirectoryInfo root, TreeNode dirNode)
+		{
+			TreeDirectoryInfo tdInfo = new TreeDirectoryInfo();
 			string[] filter = Options.GetInstance().Files.Split(';', ',', '|');
 			FileInfo[] files = { };
 
@@ -196,12 +216,17 @@ namespace JSBuild
 
 			foreach (FileInfo f in files)
 			{
-				hasChildren = true;
+				tdInfo.fileCount++;
 				TreeNode fileNode = new FileNode(f.Name, 9, f.FullName, f, root);
 				fileNode.Checked = project.IsSelected(project.GetPath(f.FullName));
 				dirNode.Nodes.Add(fileNode);
+
+				if (fileNode.Checked)
+				{
+					tdInfo.selectedFileCount++;
+				}
 			}
-			return hasChildren;
+			return tdInfo;
 		}
 
 		private FileInfo[] GetFiles(DirectoryInfo dir, string filePattern)
@@ -214,6 +239,19 @@ namespace JSBuild
 			catch { }
 
 			return files;
+		}
+
+		private void LoadTargets()
+		{
+			List<Target> ts = project.GetTargets(false);
+			targets.BeginUpdate();
+			targets.Items.Clear();
+			foreach (Target t in ts)
+			{
+				targets.Items.Add(t.Name, t.Name, 9).SubItems.Add(t.File);
+			}
+			targets.EndUpdate();
+			btnRemoveTarget.Enabled = btnCopy.Enabled = btnModifyTarget.Enabled = (targets.SelectedItems.Count > 0);
 		}
 
         private void tbNew_Click(object sender, EventArgs e)
@@ -454,9 +492,9 @@ namespace JSBuild
 
         private void btnAddOutFile_Click(object sender, EventArgs e)
         {
-            OutputForm o = new OutputForm(null);
-            o.ShowDialog(this);
-            LoadTargets();
+			OutputForm o = new OutputForm(null);
+			o.ShowDialog(this);
+			LoadTargets();
         }
 
         private void btnOutputBrowse_Click(object sender, EventArgs e)
@@ -505,15 +543,10 @@ namespace JSBuild
 
         private void btnModifyTarget_Click(object sender, EventArgs e)
         {
-			Target t = project.GetTarget(targets.SelectedItems[0].Name);
-			if (t == null || t.Includes == null)
+			Target target = GetTarget(targets.SelectedItems[0].Name);
+			if (target != null)
 			{
-				MessageBox.Show("The files included in this target no longer match the selected file filter.  Either remove this target or update your file filter in the Options window.",
-					"JS Builder", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-			}
-			else
-			{
-				OutputForm o = new OutputForm(t);
+				OutputForm o = new OutputForm(target);
 				o.ShowDialog(this);
 				LoadTargets();
 			}
@@ -545,12 +578,31 @@ namespace JSBuild
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Target target = project.GetTarget(targets.SelectedItems[0].Name);
-            target.Name = "Copy of " + target.Name;
-            OutputForm o = new OutputForm(target);
-            o.ShowDialog(this);
-            LoadTargets();
+            Target target = GetTarget(targets.SelectedItems[0].Name);
+			if (target != null)
+			{
+				target.Name = "Copy of " + target.Name;
+				OutputForm o = new OutputForm(target);
+				o.ShowDialog(this);
+				LoadTargets();
+			}
         }
+
+		private Target GetTarget(string name)
+		{
+			Target t = project.GetTarget(name);
+
+			if (t == null || t.Includes == null)
+			{
+				MessageBox.Show("The files included in this target are no longer valid.  Either remove and re-add this target or update your file list.",
+					"JS Builder", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				return null;
+			}
+			else
+			{
+				return t;
+			}
+		}
 
         #region Splitter focus stealing code
         private Control focused = null;
@@ -597,12 +649,16 @@ namespace JSBuild
         private void targets_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ListViewItem clickItem = targets.GetItemAt(e.X, e.Y);
-            if(clickItem != null)
-            {
-                OutputForm o = new OutputForm(project.GetTarget(clickItem.Name));
-                o.ShowDialog(this);
-                LoadTargets();
-            }
+			if (clickItem != null)
+			{
+				Target target = GetTarget(clickItem.Name);
+				if (target != null)
+				{
+					OutputForm o = new OutputForm(target);
+					o.ShowDialog(this);
+					LoadTargets();
+				}
+			}
         }
 
         private void files_DragEnter(object sender, DragEventArgs e)
