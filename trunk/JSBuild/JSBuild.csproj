@@ -164,5 +164,7 @@ copy "$(SolutionDir)JSBuild\shorthand.txt" "$(TargetDir)"
 copy "$(SolutionDir)JSBuild\project.xml" "$(SolutionDir)JSBuildConsole\$(OutDir)"
 copy "$(SolutionDir)JSBuild\shorthand.txt" "$(SolutionDir)JSBuildConsole\$(OutDir)"
 </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

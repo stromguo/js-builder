@@ -46,6 +46,7 @@ namespace JSBuild
 
         private void button1_Click(object sender, EventArgs e)
         {
+			bool fileFilterChanged = (txtFiles.Text != options.Files);
 			options.Save(Application.ExecutablePath);
             this.Close();
         }
