@@ -14,15 +14,27 @@ namespace JSBuild
     {
         private Target target;
         private String originalName;
+
         public OutputForm(Target t)
         {
-            this.target = (t == null ? new Target("New Target 1", "$output\\newtarget1.js", new List<string>()) : t);
-            this.originalName = target.Name;
-            InitializeComponent();
-            files.BeginUpdate();
-            Project p = Project.GetInstance();
+			Project p = Project.GetInstance();
+			InitializeComponent();
+			files.BeginUpdate();
+
+			if (t == null)
+			{
+				this.target = new Target("New Target", "$output\\target.js", new List<string>());
+				this.originalName = "";
+			}
+			else
+			{
+				this.target = t;
+				this.originalName = target.Name;
+			}
+            
             List<FileInfo> selFiles = p.SelectedFiles;
             ListViewItem[] incItems = new ListViewItem[target.Includes.Count];
+
             foreach(FileInfo sf in selFiles)
             {
                 string name = p.GetPath(sf.FullName);
@@ -78,21 +90,38 @@ namespace JSBuild
             Project p = Project.GetInstance();
             if(txtName.Text.Trim().Length < 1)
             {
-                MessageBox.Show("A name is required.");
+				MessageBox.Show("A target name is required.",
+					"JS Builder Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtName.Focus();
                 return;
             }
             if(txtFile.Text.Trim().Length < 1)
             {
-                MessageBox.Show("A file name is required.");
+				MessageBox.Show("A file name is required.",
+					"JS Builder Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 txtFile.Focus();
                 return;
             }
             if(incs.Items.Count < 1)
             {
-                MessageBox.Show("You must select at least one file to include.");
+				MessageBox.Show("You must select at least one file to include.",
+					"JS Builder Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				files.Focus();
                 return;
             }
+			if (originalName.Length == 0)
+			{
+				List<Target> targets = p.GetTargets(false);
+				foreach (Target t in targets)
+				{
+					if (t.Name.Trim().ToLower() == txtName.Text.Trim().ToLower())
+					{
+						MessageBox.Show("The target name '" + txtName.Text.Trim() + "' already exists.  Please choose a new name.",
+							"JS Builder Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						return;
+					}
+				}
+			}
             target.Includes = new List<string>(incs.Items.Count);
             foreach(ListViewItem li in incs.Items)
             {
@@ -187,5 +216,18 @@ namespace JSBuild
         {
             txtList.Enabled = cbWrap.Checked;
         }
+
+		private void txtFile_TextChanged(object sender, EventArgs e)
+		{
+			if (txtFile.Text.Trim().ToLower().EndsWith(".js"))
+			{
+				debug.Enabled = true;
+			}
+			else
+			{
+				debug.Enabled = false;
+				debug.Checked = false;
+			}
+		}
     }
 }

@@ -158,8 +158,11 @@ namespace JSBuild
 					}
 				}
 			}
+
 			SetProgress(85, "Loading build targets...");
 			List<Target> targets = project.GetTargets(true);
+			bool targetsSkipped = false;
+
 			if (targets.Count > 0)
 			{
 				float targetValue = 10.0f / (targets.Count > 0 ? targets.Count : 1);
@@ -167,6 +170,12 @@ namespace JSBuild
 
 				foreach (Target target in targets)
 				{
+					if (target.Includes == null)
+					{
+						targetsSkipped = true;
+						continue;
+					}
+
 					int pct = (int)(targetValue * ++targetNumber);
 					SetProgress(85 + pct, "Building target " + (targetNumber) + " of " + targets.Count);
 					FileInfo fi = new FileInfo(Util.ApplyVars(target.File, outputDir, project));
@@ -224,6 +233,11 @@ namespace JSBuild
 						dsw.Close();
 					}
 				}
+			}
+
+			if (targetsSkipped)
+			{
+				RaiseMessage(MessageTypes.Info, "One or more build targets referenced files that are no longer included in the build project, so they were skipped.");
 			}
 			if (jsdocSkipped)
 			{

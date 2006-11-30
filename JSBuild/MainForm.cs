@@ -143,15 +143,18 @@ namespace JSBuild
 				}
 			}
 
-			if (parent == null)
+			if (tdInfo.fileCount > 0 || dirNode.Nodes.Count > 0)
 			{
-				files.Nodes.Add(dirNode);
-				// always expand the root node
-				dirNode.Expand();
-			}
-			else
-			{
-				parent.Nodes.Add(dirNode);
+				if (parent == null)
+				{
+					files.Nodes.Add(dirNode);
+					// always expand the root node
+					dirNode.Expand();
+				}
+				else
+				{
+					parent.Nodes.Add(dirNode);
+				}
 			}
 
 			return dirNode.Checked;
@@ -374,7 +377,15 @@ namespace JSBuild
 
         private void mnWebSite_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("IExplore.exe", "http://www.jackslocum.com/");
+			try
+			{
+				//This will attempt to use the system default browser
+				System.Diagnostics.Process.Start("http://www.jackslocum.com/");
+			}
+			catch
+			{
+				MessageBox.Show("There was a problem starting your web browser.", "JS Builder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+			}
         }
 
         protected DialogResult SaveProject()
@@ -408,16 +419,21 @@ namespace JSBuild
             }
 			Options.GetInstance().Save(Application.ExecutablePath);
             // save position and size
-            Positioning.Save(this,
-                             RegistryHive.CurrentUser, REGISTRY_KEY);
+            Positioning.Save(this, RegistryHive.CurrentUser, REGISTRY_KEY);
 
         }
 
         private void tbRefresh_Click(object sender, EventArgs e)
         {
-            LoadFiles();
-			Project.GetInstance().FileFilter = Options.GetInstance().Files;
+			RefreshTree();
         }
+
+		private void RefreshTree()
+		{
+			LoadFiles();
+			Project.GetInstance().FileFilter = Options.GetInstance().Files;
+			tbRemoveFolder.Enabled = false;
+		}
 
 		private void Build()
 		{
@@ -473,7 +489,8 @@ namespace JSBuild
         {
             if(project.SelectedFiles.Count < 1)
             {
-                MessageBox.Show("The project doesn't contain any files to build.");
+                MessageBox.Show("The project doesn't contain any files to build.", "JS Builder", 
+					MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             status.Text = "";
@@ -486,8 +503,16 @@ namespace JSBuild
 
 		private void tbOptions_Click(object sender, EventArgs e)
         {
+			string origFileFilter = Options.GetInstance().Files;
             OptionsForm o = new OptionsForm();
-            o.ShowDialog(this);
+
+			if (o.ShowDialog(this) == DialogResult.OK)
+			{
+				if (origFileFilter != Options.GetInstance().Files)
+				{
+					RefreshTree();
+				}
+			}
         }
 
         private void btnAddOutFile_Click(object sender, EventArgs e)
@@ -682,6 +707,7 @@ namespace JSBuild
         private void files_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
             foreach(string file in files)
             {
                 DirectoryInfo d = new DirectoryInfo(file);
