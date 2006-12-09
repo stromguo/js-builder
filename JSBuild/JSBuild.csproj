@@ -124,6 +124,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="JSBuild.exe.manifest" />
     <None Include="Properties\DataSources\Project.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -159,12 +160,12 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>copy "$(SolutionDir)JSBuild\project.xml" "$(TargetDir)"
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>copy "$(SolutionDir)JSBuild\project.xml" "$(TargetDir)"
 copy "$(SolutionDir)JSBuild\shorthand.txt" "$(TargetDir)"
+copy "$(SolutionDir)JSBuild\JSBuild.exe.manifest" "$(TargetDir)"
 copy "$(SolutionDir)JSBuild\project.xml" "$(SolutionDir)JSBuildConsole\$(OutDir)"
-copy "$(SolutionDir)JSBuild\shorthand.txt" "$(SolutionDir)JSBuildConsole\$(OutDir)"
-</PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+copy "$(SolutionDir)JSBuild\shorthand.txt" "$(SolutionDir)JSBuildConsole\$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

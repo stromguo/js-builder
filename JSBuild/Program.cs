@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.Drawing;
 
 namespace JSBuild
 {
@@ -28,7 +30,8 @@ namespace JSBuild
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			Application.DoEvents();
 			Application.Run(new MainForm(startProject));
-        }
-    }
+		}
+	}
 }

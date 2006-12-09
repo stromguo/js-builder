@@ -338,7 +338,6 @@ namespace JSBuild
 			this.tbRefresh.Name = "tbRefresh";
 			this.tbRefresh.Size = new System.Drawing.Size(23, 22);
 			this.tbRefresh.Text = "Refresh File List";
-			this.tbRefresh.Visible = false;
 			this.tbRefresh.Click += new System.EventHandler(this.tbRefresh_Click);
 			// 
 			// toolStripSeparator1
