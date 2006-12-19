@@ -19,6 +19,7 @@ namespace JSBuild
 		private const bool defaultReopen = true;
 		private const bool defaultAutoSave = true;
 		private const bool defaultAutoCalc = false;
+        private const bool defaultClearOutputDir = false;
 
 		private static Options instance = new Options();
 
@@ -62,6 +63,7 @@ namespace JSBuild
 			this.Reopen = defaultReopen;
 			this.AutoSave = defaultAutoSave;
 			this.AutoCalc = defaultAutoCalc;
+            this.ClearOutputDir = defaultClearOutputDir;
 		}
 
         private String outputSuffix = defaultOutputSuffix;
@@ -134,6 +136,14 @@ namespace JSBuild
         {
             get { return autoCalc; }
             set { autoCalc = value; }
+        }
+
+        private bool clearOutputDir = defaultClearOutputDir;
+
+        public bool ClearOutputDir
+        {
+            get { return clearOutputDir; }
+            set { clearOutputDir = value; }
         }
     }
 }

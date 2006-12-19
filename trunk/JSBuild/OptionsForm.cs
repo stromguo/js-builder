@@ -24,6 +24,7 @@ namespace JSBuild
             cbAutoSave.DataBindings.Add("Checked", options, "AutoSave");
             cbCalc.DataBindings.Add("Checked", options, "AutoCalc");
             cbReopen.DataBindings.Add("Checked", options, "Reopen");
+            cbClearOutputDir.DataBindings.Add("Checked", options, "ClearOutputDir");
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -69,6 +70,7 @@ namespace JSBuild
 			cbAutoSave.Checked = options.AutoSave;
 			cbCalc.Checked = options.AutoCalc;
 			cbReopen.Checked = options.Reopen;
+            cbClearOutputDir.Checked = options.ClearOutputDir;
 		}
     }
 }

@@ -78,6 +78,23 @@ namespace JSBuild
 			//Fix for default '$project\build' get rendered literally:
 			outputDir = outputDir.Replace("$project", projectDir);
 
+            //rrs - option of clearing the output dir
+            if (Options.GetInstance().ClearOutputDir)
+            {
+                DirectoryInfo outDirInfo = new DirectoryInfo(outputDir);
+                DirectoryInfo[] dirInfos = outDirInfo.GetDirectories();
+                foreach (DirectoryInfo dirInfo in dirInfos)
+                {
+                    dirInfo.Delete(true);
+                }
+
+                FileInfo[] fileInfos = outDirInfo.GetFiles();
+                foreach (FileInfo fileInfo in fileInfos)
+                {
+                    fileInfo.Delete();
+                }
+            }
+            //rrs
 			string header = Util.ApplyVars(project.Copyright, outputDir, project);
 			if (header.Length > 0)
 			{
