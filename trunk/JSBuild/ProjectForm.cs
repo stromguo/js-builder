@@ -60,14 +60,14 @@ namespace JSBuild
 			{
 				if (txtName.Text.Length > 0)
 				{
-					button1.Enabled = true;
+					okButton.Enabled = true;
 					return;
 				}
 			}
-			button1.Enabled = false;
+			okButton.Enabled = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             string filePath = txtPath.Text.Trim();
 			DirectoryInfo path = Directory.GetParent(filePath);
@@ -103,7 +103,7 @@ namespace JSBuild
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();

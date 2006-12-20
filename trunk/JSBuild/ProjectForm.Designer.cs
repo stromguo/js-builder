@@ -41,8 +41,8 @@ namespace JSBuild
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
+			this.cancelButton = new System.Windows.Forms.Button();
+			this.okButton = new System.Windows.Forms.Button();
 			this.txtName = new System.Windows.Forms.TextBox();
 			this.saveDialog = new System.Windows.Forms.SaveFileDialog();
 			this.SuspendLayout();
@@ -143,26 +143,27 @@ namespace JSBuild
 			this.label5.Size = new System.Drawing.Size(450, 1);
 			this.label5.TabIndex = 12;
 			// 
-			// button2
+			// cancelButton
 			// 
-			this.button2.Location = new System.Drawing.Point(386, 257);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 5;
-			this.button2.Text = "Cancel";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancelButton.Location = new System.Drawing.Point(386, 257);
+			this.cancelButton.Name = "cancelButton";
+			this.cancelButton.Size = new System.Drawing.Size(75, 23);
+			this.cancelButton.TabIndex = 5;
+			this.cancelButton.Text = "Cancel";
+			this.cancelButton.UseVisualStyleBackColor = true;
+			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
 			// 
-			// button1
+			// okButton
 			// 
-			this.button1.Enabled = false;
-			this.button1.Location = new System.Drawing.Point(307, 257);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 4;
-			this.button1.Text = "OK";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.okButton.Enabled = false;
+			this.okButton.Location = new System.Drawing.Point(307, 257);
+			this.okButton.Name = "okButton";
+			this.okButton.Size = new System.Drawing.Size(75, 23);
+			this.okButton.TabIndex = 4;
+			this.okButton.Text = "OK";
+			this.okButton.UseVisualStyleBackColor = true;
+			this.okButton.Click += new System.EventHandler(this.okButton_Click);
 			// 
 			// txtName
 			// 
@@ -178,12 +179,14 @@ namespace JSBuild
 			// 
 			// ProjectForm
 			// 
+			this.AcceptButton = this.okButton;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.cancelButton;
 			this.ClientSize = new System.Drawing.Size(476, 304);
 			this.ControlBox = false;
-			this.Controls.Add(this.button2);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.cancelButton);
+			this.Controls.Add(this.okButton);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
@@ -215,8 +218,8 @@ namespace JSBuild
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.SaveFileDialog saveDialog;
 

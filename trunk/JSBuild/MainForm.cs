@@ -485,20 +485,21 @@ namespace JSBuild
 		}
 		#endregion
 		
-		private void tbBuild_Click(object sender, EventArgs e)
-        {
-            if(project.SelectedFiles.Count < 1)
-            {
-                MessageBox.Show("The project doesn't contain any files to build.", "JS Builder", 
+
+		private void BuildClick(object sender, EventArgs e)
+		{
+			if (project.SelectedFiles.Count < 1)
+			{
+				MessageBox.Show("The project doesn't contain any files to build.", "JS Builder",
 					MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            status.Text = "";
-            pform = new ProgressForm();
-            pform.Text = "Building " + project.Name;
-            Thread t = new Thread(new ThreadStart(Build));
-            t.Start();
-            pform.ShowDialog(this);
+				return;
+			}
+			status.Text = "";
+			pform = new ProgressForm();
+			pform.Text = "Building " + project.Name;
+			Thread t = new Thread(new ThreadStart(Build));
+			t.Start();
+			pform.ShowDialog(this);
 		}
 
 		private void tbOptions_Click(object sender, EventArgs e)

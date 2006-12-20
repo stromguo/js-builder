@@ -35,14 +35,20 @@ namespace JSBuild
 			this.txtFile = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
+			this.okButton = new System.Windows.Forms.Button();
+			this.cancelButton = new System.Windows.Forms.Button();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
+			this.incs = new JSBuild.DDListView();
+			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
 			this.images = new System.Windows.Forms.ImageList(this.components);
+			this.files = new JSBuild.DDListView();
+			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.debug = new System.Windows.Forms.CheckBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -50,12 +56,6 @@ namespace JSBuild
 			this.txtList = new System.Windows.Forms.TextBox();
 			this.cbWrap = new System.Windows.Forms.CheckBox();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.incs = new JSBuild.DDListView();
-			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-			this.files = new JSBuild.DDListView();
-			this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -110,27 +110,28 @@ namespace JSBuild
 			this.label3.TabIndex = 7;
 			this.label3.Text = "Project Files:";
 			// 
-			// button1
+			// okButton
 			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Location = new System.Drawing.Point(526, 6);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 6;
-			this.button1.Text = "OK";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.okButton.Location = new System.Drawing.Point(526, 6);
+			this.okButton.Name = "okButton";
+			this.okButton.Size = new System.Drawing.Size(75, 23);
+			this.okButton.TabIndex = 6;
+			this.okButton.Text = "OK";
+			this.okButton.UseVisualStyleBackColor = true;
+			this.okButton.Click += new System.EventHandler(this.okButton_Click);
 			// 
-			// button2
+			// cancelButton
 			// 
-			this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.button2.Location = new System.Drawing.Point(607, 6);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 7;
-			this.button2.Text = "Cancel";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.button2_Click);
+			this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.cancelButton.Location = new System.Drawing.Point(607, 6);
+			this.cancelButton.Name = "cancelButton";
+			this.cancelButton.Size = new System.Drawing.Size(75, 23);
+			this.cancelButton.TabIndex = 7;
+			this.cancelButton.Text = "Cancel";
+			this.cancelButton.UseVisualStyleBackColor = true;
+			this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
 			// 
 			// tabControl1
 			// 
@@ -203,6 +204,39 @@ namespace JSBuild
 			this.label4.TabIndex = 11;
 			this.label4.Text = "Included Files:";
 			// 
+			// incs
+			// 
+			this.incs.AllowDrop = true;
+			this.incs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader3,
+            this.columnHeader4});
+			this.incs.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.incs.FullRowSelect = true;
+			this.incs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.incs.HideSelection = false;
+			this.incs.LabelWrap = false;
+			this.incs.Location = new System.Drawing.Point(332, 67);
+			this.incs.Name = "incs";
+			this.incs.ShowGroups = false;
+			this.incs.Size = new System.Drawing.Size(323, 199);
+			this.incs.SmallImageList = this.images;
+			this.incs.TabIndex = 5;
+			this.incs.UseCompatibleStateImageBehavior = false;
+			this.incs.View = System.Windows.Forms.View.Details;
+			this.incs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.incs_MouseDoubleClick);
+			this.incs.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView2_DragEnter);
+			this.incs.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView2_DragDrop);
+			// 
+			// columnHeader3
+			// 
+			this.columnHeader3.Text = "File Name";
+			this.columnHeader3.Width = 121;
+			// 
+			// columnHeader4
+			// 
+			this.columnHeader4.Text = "Full Path";
+			this.columnHeader4.Width = 278;
+			// 
 			// images
 			// 
 			this.images.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("images.ImageStream")));
@@ -217,6 +251,40 @@ namespace JSBuild
 			this.images.Images.SetKeyName(7, "build.gif");
 			this.images.Images.SetKeyName(8, "save.gif");
 			this.images.Images.SetKeyName(9, "script.gif");
+			// 
+			// files
+			// 
+			this.files.AllowDrop = true;
+			this.files.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+			this.files.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.files.FullRowSelect = true;
+			this.files.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.files.HideSelection = false;
+			this.files.LabelWrap = false;
+			this.files.Location = new System.Drawing.Point(3, 67);
+			this.files.Name = "files";
+			this.files.ShowGroups = false;
+			this.files.Size = new System.Drawing.Size(323, 199);
+			this.files.SmallImageList = this.images;
+			this.files.Sorting = System.Windows.Forms.SortOrder.Ascending;
+			this.files.TabIndex = 4;
+			this.files.UseCompatibleStateImageBehavior = false;
+			this.files.View = System.Windows.Forms.View.Details;
+			this.files.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.files_MouseDoubleClick);
+			this.files.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView1_DragEnter);
+			this.files.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "File Name";
+			this.columnHeader1.Width = 122;
+			// 
+			// columnHeader2
+			// 
+			this.columnHeader2.Text = "Full Path";
+			this.columnHeader2.Width = 278;
 			// 
 			// debug
 			// 
@@ -285,85 +353,20 @@ namespace JSBuild
 			// 
 			// panel1
 			// 
-			this.panel1.Controls.Add(this.button2);
-			this.panel1.Controls.Add(this.button1);
+			this.panel1.Controls.Add(this.cancelButton);
+			this.panel1.Controls.Add(this.okButton);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel1.Location = new System.Drawing.Point(4, 419);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(705, 39);
 			this.panel1.TabIndex = 11;
 			// 
-			// incs
-			// 
-			this.incs.AllowDrop = true;
-			this.incs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3,
-            this.columnHeader4});
-			this.incs.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.incs.FullRowSelect = true;
-			this.incs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.incs.HideSelection = false;
-			this.incs.LabelWrap = false;
-			this.incs.Location = new System.Drawing.Point(332, 67);
-			this.incs.Name = "incs";
-			this.incs.ShowGroups = false;
-			this.incs.Size = new System.Drawing.Size(323, 199);
-			this.incs.SmallImageList = this.images;
-			this.incs.TabIndex = 5;
-			this.incs.UseCompatibleStateImageBehavior = false;
-			this.incs.View = System.Windows.Forms.View.Details;
-			this.incs.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.incs_MouseDoubleClick);
-			this.incs.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView2_DragEnter);
-			this.incs.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView2_DragDrop);
-			// 
-			// columnHeader3
-			// 
-			this.columnHeader3.Text = "File Name";
-			this.columnHeader3.Width = 121;
-			// 
-			// columnHeader4
-			// 
-			this.columnHeader4.Text = "Full Path";
-			this.columnHeader4.Width = 278;
-			// 
-			// files
-			// 
-			this.files.AllowDrop = true;
-			this.files.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-			this.files.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.files.FullRowSelect = true;
-			this.files.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.files.HideSelection = false;
-			this.files.LabelWrap = false;
-			this.files.Location = new System.Drawing.Point(3, 67);
-			this.files.Name = "files";
-			this.files.ShowGroups = false;
-			this.files.Size = new System.Drawing.Size(323, 199);
-			this.files.SmallImageList = this.images;
-			this.files.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.files.TabIndex = 4;
-			this.files.UseCompatibleStateImageBehavior = false;
-			this.files.View = System.Windows.Forms.View.Details;
-			this.files.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.files_MouseDoubleClick);
-			this.files.DragEnter += new System.Windows.Forms.DragEventHandler(this.listView1_DragEnter);
-			this.files.DragDrop += new System.Windows.Forms.DragEventHandler(this.listView1_DragDrop);
-			// 
-			// columnHeader1
-			// 
-			this.columnHeader1.Text = "File Name";
-			this.columnHeader1.Width = 122;
-			// 
-			// columnHeader2
-			// 
-			this.columnHeader2.Text = "Full Path";
-			this.columnHeader2.Width = 278;
-			// 
 			// OutputForm
 			// 
+			this.AcceptButton = this.okButton;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.cancelButton;
 			this.ClientSize = new System.Drawing.Size(713, 462);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.panel1);
@@ -399,8 +402,8 @@ namespace JSBuild
         private System.Windows.Forms.TextBox txtFile;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button okButton;
+        private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Panel panel1;

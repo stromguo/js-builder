@@ -31,7 +31,7 @@ namespace JSBuild
 		{
 			get
 			{
-				return "Contributors: Brian Moeskau";
+				return "Contributors: Brian Moeskau, Roger R. Smith";
 			}
 		}
         public string AssemblyTitle

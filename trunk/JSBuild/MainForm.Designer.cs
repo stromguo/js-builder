@@ -217,13 +217,14 @@ namespace JSBuild
 			this.mnBuild.Enabled = false;
 			this.mnBuild.Image = ((System.Drawing.Image)(resources.GetObject("mnBuild.Image")));
 			this.mnBuild.Name = "mnBuild";
-			this.mnBuild.Size = new System.Drawing.Size(144, 22);
+			this.mnBuild.Size = new System.Drawing.Size(152, 22);
 			this.mnBuild.Text = "Build Project";
+			this.mnBuild.Click += new System.EventHandler(this.BuildClick);
 			// 
 			// mnOptions
 			// 
 			this.mnOptions.Name = "mnOptions";
-			this.mnOptions.Size = new System.Drawing.Size(144, 22);
+			this.mnOptions.Size = new System.Drawing.Size(152, 22);
 			this.mnOptions.Text = "Options...";
 			this.mnOptions.Click += new System.EventHandler(this.tbOptions_Click);
 			// 
@@ -364,7 +365,7 @@ namespace JSBuild
 			this.tbBuild.Name = "tbBuild";
 			this.tbBuild.Size = new System.Drawing.Size(23, 22);
 			this.tbBuild.Text = "Build Project";
-			this.tbBuild.Click += new System.EventHandler(this.tbBuild_Click);
+			this.tbBuild.Click += new System.EventHandler(this.BuildClick);
 			// 
 			// statusStrip
 			// 
