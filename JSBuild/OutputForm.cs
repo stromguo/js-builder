@@ -80,12 +80,12 @@ namespace JSBuild
         {
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
             Project p = Project.GetInstance();
             if(txtName.Text.Trim().Length < 1)
