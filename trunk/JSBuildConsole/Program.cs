@@ -38,6 +38,7 @@ namespace JSBuild
 					case Util.CommandLine.AvailableArgs.DisplayHelpShort:
 						displayHelp = true;
 						break;
+
                     case Util.CommandLine.AvailableArgs.CleanOutputDirectory:
                         cleanOutputDir = true;
                         break;
@@ -147,7 +148,9 @@ namespace JSBuild
 			Console.Out.WriteLine("Options :");
 			Console.Out.WriteLine("\n   /verbose       Display informational logging during build.");
 			Console.Out.WriteLine("                  If omitted, errors will still be displayed.");
-			Console.Out.WriteLine("\n"+@"Example : JSBuildConsole /path=C:\projectdir\myproject.jsb /verbose");
+			Console.Out.WriteLine("\n   /clean         Delete any existing output files and folders");
+			Console.Out.WriteLine("                  prior to building.");
+			Console.Out.WriteLine("\nExample : JSBuildConsole /path=C:\\projectdir\\myproject.jsb /verbose");
 			Wait();
 			Environment.Exit(-99);
 		}
