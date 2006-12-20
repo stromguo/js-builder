@@ -72,6 +72,29 @@ namespace JSBuild
 			//val.Replace("$fileName", fileName);
 			return val;
 		}
+
+        public static void ClearOutputDirectory(string outputDir){
+            try
+            {
+                if (outputDir != null && outputDir != string.Empty)
+                {
+                    DirectoryInfo outDirInfo = new DirectoryInfo(outputDir);
+                    DirectoryInfo[] dirInfos = outDirInfo.GetDirectories();
+                    foreach (DirectoryInfo dirInfo in dirInfos)
+                    {
+                        dirInfo.Delete(true);
+                    }
+
+                    FileInfo[] fileInfos = outDirInfo.GetFiles();
+                    foreach (FileInfo fileInfo in fileInfos)
+                    {
+                        fileInfo.Delete();
+                    }
+                }
+            }
+            catch (Exception ex)
+            { }
+        }
         
         public static class CommandLine
         {
@@ -90,6 +113,7 @@ namespace JSBuild
 				public const string VerboseOutput = "verbose";
 				public const string DisplayHelp = "help";
 				public const string DisplayHelpShort = "?";
+                public const string CleanOutputDirectory = "clean";
 			}
 
 			public static bool IsArgNameValid(string argName)
@@ -97,7 +121,8 @@ namespace JSBuild
 				return (argName == AvailableArgs.ProjectPath
 					|| argName == AvailableArgs.VerboseOutput
 					|| argName == AvailableArgs.DisplayHelp
-					|| argName == AvailableArgs.DisplayHelpShort);
+					|| argName == AvailableArgs.DisplayHelpShort
+                    || argName == AvailableArgs.CleanOutputDirectory);
 			}
 
 			public static Arg ParseArg(string argString)

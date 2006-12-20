@@ -8,6 +8,7 @@ namespace JSBuild
 	class Program
 	{
 		static bool verbose = false;
+        static bool cleanOutputDir = false;
 
 		static void Main(string[] args)
 		{
@@ -37,6 +38,9 @@ namespace JSBuild
 					case Util.CommandLine.AvailableArgs.DisplayHelpShort:
 						displayHelp = true;
 						break;
+                    case Util.CommandLine.AvailableArgs.CleanOutputDirectory:
+                        cleanOutputDir = true;
+                        break;
 				}
 			}
 
@@ -85,6 +89,9 @@ namespace JSBuild
 			//create one using the GUI then copy it into the directory from which this assembly
 			//is running (normally jsbuildconsole\bin\debug).  Otherwise it will simply use defaults.
 			Options.GetInstance().Load(appExePath);
+
+            //rrs
+            Options.GetInstance().ClearOutputDir = cleanOutputDir;
 
 			ProjectBuilder.MessageAvailable += new MessageDelegate(ProjectBuilder_MessageAvailable);
 			ProjectBuilder.ProgressUpdate += new ProgressDelegate(ProjectBuilder_ProgressUpdate);
