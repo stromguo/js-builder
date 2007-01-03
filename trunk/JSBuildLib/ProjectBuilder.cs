@@ -81,7 +81,7 @@ namespace JSBuild
 			
 			//Fix for default '$project\build' getting rendered literally:
 			outputDir = outputDir.Replace("$project", projectDir);
-			RaiseMessage(MessageTypes.Info, "Output path = " + outputDir);
+			RaiseMessage(MessageTypes.Status, "Output path = " + outputDir);
 
             //rrs - option of clearing the output dir
             if (Options.GetInstance().ClearOutputDir)
@@ -113,20 +113,17 @@ namespace JSBuild
 				file.Header = header;
 				if (project.Source)
 				{
+					//Copy original source files to source output path
 					DirectoryInfo dir = getDirectory(src + file.PathInfo);
 					file.CopyTo(Util.FixPath(dir.FullName) + file.File.Name);
 				}
 
-				DirectoryInfo buildDir = getDirectory(build + file.PathInfo);
-				string target = Util.FixPath(buildDir.FullName) + file.OutputFilename;
-
 				if (project.Minify && file.SupportsSourceParsing)
 				{
+					//Minify files and copy to build output path
+					DirectoryInfo dir = getDirectory(build + file.PathInfo);
+					string target = Util.FixPath(dir.FullName) + file.OutputFilename;
 					file.MinifyTo(target);
-				}
-				else
-				{
-					file.CopyTo(target);
 				}
 
 				//file.GetCommentBlocks();
