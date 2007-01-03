@@ -8,17 +8,19 @@ namespace JSBuild
 	class Program
 	{
 		static bool verbose = false;
-        static bool cleanOutputDir = false;
+		static bool? cleanOutputDir = null;
 
 		static void Main(string[] args)
 		{
-			String projectPath = null;
+			String projectPath = null, outputPath = null;
 			bool displayHelp = false;
 			string invalidArg = "";
 
 			for (int i = 0; i < args.Length; i++)
 			{
 				Util.CommandLine.Arg arg = Util.CommandLine.ParseArg(args[i]);
+
+				//Note: If you add a new arg, please add the appropriate help text in DisplayHelp()
 
 				switch (arg.Name)
 				{
@@ -39,9 +41,13 @@ namespace JSBuild
 						displayHelp = true;
 						break;
 
-                    case Util.CommandLine.AvailableArgs.CleanOutputDirectory:
-                        cleanOutputDir = true;
-                        break;
+					case Util.CommandLine.AvailableArgs.CleanOutputDirectory:
+						cleanOutputDir = true;
+						break;
+
+					case Util.CommandLine.AvailableArgs.OutputTarget:
+						outputPath = arg.Value;
+						break;
 				}
 			}
 
@@ -58,7 +64,7 @@ namespace JSBuild
 			{
 				try
 				{
-					Build(projectPath);
+					Build(projectPath, outputPath);
 				}
 				catch (Exception ex)
 				{
@@ -77,7 +83,7 @@ namespace JSBuild
 			}
 		}
 
-		static void Build(string projectPath)
+		static void Build(string projectPath, string outputPath)
 		{
 			Console.Out.WriteLine("\nBuilding: " + projectPath);
 			Console.Out.WriteLine();
@@ -91,9 +97,11 @@ namespace JSBuild
 			//is running (normally jsbuildconsole\bin\debug).  Otherwise it will simply use defaults.
 			Options.GetInstance().Load(appExePath);
 
-            //rrs
-            Options.GetInstance().ClearOutputDir = cleanOutputDir;
-
+			if (cleanOutputDir != null)
+			{
+				//If the clean flag was specified as a param, override the project setting
+				Options.GetInstance().ClearOutputDir = (bool)cleanOutputDir;
+			}
 			ProjectBuilder.MessageAvailable += new MessageDelegate(ProjectBuilder_MessageAvailable);
 			ProjectBuilder.ProgressUpdate += new ProgressDelegate(ProjectBuilder_ProgressUpdate);
 			ProjectBuilder.BuildComplete += new BuildCompleteDelegate(ProjectBuilder_BuildComplete);
@@ -101,7 +109,7 @@ namespace JSBuild
 			Project project = Project.GetInstance();
 			project.Load(appExePath, projectPath);
 
-			ProjectBuilder.Build(project);
+			ProjectBuilder.Build(project, outputPath);
 
 			Wait();
 		}
@@ -146,10 +154,13 @@ namespace JSBuild
 			Console.Out.WriteLine("created with the JS Builder GUI application (JSBuilder.exe).");
 			Console.Out.WriteLine("\nUsage   :  JSBuildConsole /path=<.jsb file path> [options]");
 			Console.Out.WriteLine("Options :");
-			Console.Out.WriteLine("\n   /verbose       Display informational logging during build.");
-			Console.Out.WriteLine("                  If omitted, errors will still be displayed.");
-			Console.Out.WriteLine("\n   /clean         Delete any existing output files and folders");
-			Console.Out.WriteLine("                  prior to building.");
+			Console.Out.WriteLine("\n   /verbose        Display informational logging during build.");
+			Console.Out.WriteLine("                   If omitted, errors will still be displayed.");
+			Console.Out.WriteLine("\n   /output=<path>  Override the build output path specified in");
+			Console.Out.WriteLine("                   the project file with a new path.");
+			Console.Out.WriteLine("\n   /clean          Delete any existing output files and folders");
+			Console.Out.WriteLine("                   prior to building.");
+			Console.Out.WriteLine("\n   /?              Display this help message.");
 			Console.Out.WriteLine("\nExample : JSBuildConsole /path=C:\\projectdir\\myproject.jsb /verbose");
 			Wait();
 			Environment.Exit(-99);
