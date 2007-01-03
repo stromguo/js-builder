@@ -65,7 +65,11 @@ namespace JSBuild
 		public static event MessageDelegate MessageAvailable;
 		public static event BuildCompleteDelegate BuildComplete;
 
-		static public void Build(Project project)
+        static public void Build(Project project)
+        {
+            Build(project, null);
+        }
+		static public void Build(Project project, string outputDir)
 		{
 			// NOTE: Make sure that we DO throw any errors that might occur here
 			// and defer handling to the caller.  The console app must be allowed
@@ -73,14 +77,16 @@ namespace JSBuild
 
 			SetProgress(1, "Initializing...");
 			string projectDir = Util.FixPath(project.ProjectDir.FullName);
-			string outputDir = Util.FixPath(project.Output);
+			outputDir = outputDir != null ? Util.FixPath(outputDir) : Util.FixPath(project.Output);
 			
-			//Fix for default '$project\build' get rendered literally:
+			//Fix for default '$project\build' getting rendered literally:
 			outputDir = outputDir.Replace("$project", projectDir);
+			RaiseMessage(MessageTypes.Info, "Output path = " + outputDir);
 
             //rrs - option of clearing the output dir
             if (Options.GetInstance().ClearOutputDir)
             {
+				RaiseMessage(MessageTypes.Status, "Clearing existing output...");
                 Util.ClearOutputDirectory(outputDir);
             }
             //rrs

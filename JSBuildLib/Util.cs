@@ -114,6 +114,7 @@ namespace JSBuild
 				public const string DisplayHelp = "help";
 				public const string DisplayHelpShort = "?";
                 public const string CleanOutputDirectory = "clean";
+                public const string OutputTarget = "output";
 			}
 
 			public static bool IsArgNameValid(string argName)
@@ -122,7 +123,8 @@ namespace JSBuild
 					|| argName == AvailableArgs.VerboseOutput
 					|| argName == AvailableArgs.DisplayHelp
 					|| argName == AvailableArgs.DisplayHelpShort
-                    || argName == AvailableArgs.CleanOutputDirectory);
+                    || argName == AvailableArgs.CleanOutputDirectory
+                    || argName == AvailableArgs.OutputTarget);
 			}
 
 			public static Arg ParseArg(string argString)
