@@ -122,8 +122,7 @@ namespace JSBuild
 				{
 					//Minify files and copy to build output path
 					DirectoryInfo dir = getDirectory(build + file.PathInfo);
-					string target = Util.FixPath(dir.FullName) + file.OutputFilename;
-					file.MinifyTo(target);
+					file.MinifyTo(Util.FixPath(dir.FullName) + file.OutputFilename);
 				}
 
 				//file.GetCommentBlocks();
