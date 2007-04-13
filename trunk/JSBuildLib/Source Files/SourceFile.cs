@@ -63,7 +63,9 @@ namespace JSBuild
 		{
 			if (this.SupportsSourceParsing && this.source.Length > 0)
 			{
-				Regex re = new Regex(@"(/\*((.|[\r\n])*?)\*/)|(\/\/.*)", RegexOptions.Compiled | RegexOptions.ECMAScript);
+				//BPM: changed to resolve the unix CRLF / url double-slash issue that kills JSB
+				//Regex re = new Regex(@"(/\*((.|[\r\n])*?)\*/)|(\/\/.*)", RegexOptions.Compiled | RegexOptions.ECMAScript);
+				Regex re = new Regex(@"(/\*((.|[\r\n])*?)\*/)", RegexOptions.Compiled | RegexOptions.ECMAScript);
 				return re.Replace(this.source, "");
 			}
 			return "";

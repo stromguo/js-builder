@@ -53,19 +53,21 @@ namespace JSBuild
 			this.tableLayoutPanel.Location = new System.Drawing.Point(9, 9);
 			this.tableLayoutPanel.Name = "tableLayoutPanel";
 			this.tableLayoutPanel.RowCount = 7;
-			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel.Size = new System.Drawing.Size(303, 206);
+			this.tableLayoutPanel.Size = new System.Drawing.Size(303, 199);
 			this.tableLayoutPanel.TabIndex = 0;
 			// 
 			// labelProductName
 			// 
 			this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.labelProductName.Font = new System.Drawing.Font("Georgia", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelProductName.ForeColor = System.Drawing.Color.MidnightBlue;
 			this.labelProductName.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.labelProductName.Location = new System.Drawing.Point(6, 0);
 			this.labelProductName.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
@@ -80,7 +82,7 @@ namespace JSBuild
 			// labelVersion
 			// 
 			this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.labelVersion.Location = new System.Drawing.Point(6, 20);
+			this.labelVersion.Location = new System.Drawing.Point(6, 30);
 			this.labelVersion.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
 			this.labelVersion.MaximumSize = new System.Drawing.Size(0, 17);
 			this.labelVersion.Name = "labelVersion";
@@ -92,7 +94,7 @@ namespace JSBuild
 			// labelCopyright
 			// 
 			this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.labelCopyright.Location = new System.Drawing.Point(6, 40);
+			this.labelCopyright.Location = new System.Drawing.Point(6, 50);
 			this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 3, 0);
 			this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 17);
 			this.labelCopyright.Name = "labelCopyright";
@@ -104,13 +106,13 @@ namespace JSBuild
 			// textBoxDescription
 			// 
 			this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textBoxDescription.Location = new System.Drawing.Point(6, 83);
+			this.textBoxDescription.Location = new System.Drawing.Point(6, 93);
 			this.textBoxDescription.Margin = new System.Windows.Forms.Padding(6, 3, 3, 3);
 			this.textBoxDescription.Multiline = true;
 			this.textBoxDescription.Name = "textBoxDescription";
 			this.textBoxDescription.ReadOnly = true;
 			this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.textBoxDescription.Size = new System.Drawing.Size(294, 74);
+			this.textBoxDescription.Size = new System.Drawing.Size(294, 44);
 			this.textBoxDescription.TabIndex = 23;
 			this.textBoxDescription.TabStop = false;
 			this.textBoxDescription.Text = "Description";
@@ -119,7 +121,7 @@ namespace JSBuild
 			// 
 			this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.okButton.Location = new System.Drawing.Point(225, 183);
+			this.okButton.Location = new System.Drawing.Point(225, 176);
 			this.okButton.Name = "okButton";
 			this.okButton.Size = new System.Drawing.Size(75, 20);
 			this.okButton.TabIndex = 24;
@@ -129,19 +131,19 @@ namespace JSBuild
 			// 
 			this.linkLabel1.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.linkLabel1.AutoSize = true;
-			this.linkLabel1.Location = new System.Drawing.Point(3, 63);
+			this.linkLabel1.Location = new System.Drawing.Point(3, 73);
 			this.linkLabel1.Name = "linkLabel1";
-			this.linkLabel1.Size = new System.Drawing.Size(151, 13);
+			this.linkLabel1.Size = new System.Drawing.Size(182, 13);
 			this.linkLabel1.TabIndex = 25;
 			this.linkLabel1.TabStop = true;
-			this.linkLabel1.Text = "http://www.JackSlocum.com/";
+			this.linkLabel1.Text = "http://code.google.com/p/js-builder/";
 			this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
 			// 
 			// labelAdditional
 			// 
 			this.labelAdditional.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelAdditional.AutoSize = true;
-			this.labelAdditional.Location = new System.Drawing.Point(3, 167);
+			this.labelAdditional.Location = new System.Drawing.Point(3, 147);
 			this.labelAdditional.Name = "labelAdditional";
 			this.labelAdditional.Size = new System.Drawing.Size(53, 13);
 			this.labelAdditional.TabIndex = 26;
@@ -149,11 +151,9 @@ namespace JSBuild
 			// 
 			// AboutDialog
 			// 
-			this.AcceptButton = this.okButton;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.CancelButton = this.okButton;
-			this.ClientSize = new System.Drawing.Size(321, 224);
+			this.ClientSize = new System.Drawing.Size(321, 217);
 			this.Controls.Add(this.tableLayoutPanel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MaximizeBox = false;

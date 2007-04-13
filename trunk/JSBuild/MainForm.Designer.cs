@@ -115,6 +115,8 @@ namespace JSBuild
 			this.textBox5 = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.folders = new System.Windows.Forms.FolderBrowserDialog();
+			this.mnuExtjsWebsite = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.menu.SuspendLayout();
 			this.toolbar.SuspendLayout();
 			this.statusStrip.SuspendLayout();
@@ -217,21 +219,23 @@ namespace JSBuild
 			this.mnBuild.Enabled = false;
 			this.mnBuild.Image = ((System.Drawing.Image)(resources.GetObject("mnBuild.Image")));
 			this.mnBuild.Name = "mnBuild";
-			this.mnBuild.Size = new System.Drawing.Size(152, 22);
+			this.mnBuild.Size = new System.Drawing.Size(144, 22);
 			this.mnBuild.Text = "Build Project";
 			this.mnBuild.Click += new System.EventHandler(this.BuildClick);
 			// 
 			// mnOptions
 			// 
 			this.mnOptions.Name = "mnOptions";
-			this.mnOptions.Size = new System.Drawing.Size(152, 22);
+			this.mnOptions.Size = new System.Drawing.Size(144, 22);
 			this.mnOptions.Text = "Options...";
 			this.mnOptions.Click += new System.EventHandler(this.tbOptions_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuExtjsWebsite,
             this.mnWebSite,
+            this.toolStripSeparator5,
             this.mnAbout});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
@@ -241,15 +245,15 @@ namespace JSBuild
 			// 
 			this.mnWebSite.Image = ((System.Drawing.Image)(resources.GetObject("mnWebSite.Image")));
 			this.mnWebSite.Name = "mnWebSite";
-			this.mnWebSite.Size = new System.Drawing.Size(187, 22);
-			this.mnWebSite.Text = "www.jackslocum.com";
+			this.mnWebSite.Size = new System.Drawing.Size(247, 22);
+			this.mnWebSite.Text = "Visit the JSB Google Code website";
 			this.mnWebSite.Click += new System.EventHandler(this.mnWebSite_Click);
 			// 
 			// mnAbout
 			// 
 			this.mnAbout.Name = "mnAbout";
-			this.mnAbout.Size = new System.Drawing.Size(187, 22);
-			this.mnAbout.Text = "About JSBuild";
+			this.mnAbout.Size = new System.Drawing.Size(261, 22);
+			this.mnAbout.Text = "About JS Builder";
 			this.mnAbout.Click += new System.EventHandler(this.mnAbout_Click);
 			// 
 			// toolbar
@@ -1022,6 +1026,18 @@ namespace JSBuild
 			this.label6.TabIndex = 17;
 			this.label6.Text = "Output Directory:";
 			// 
+			// mnuExtjsWebsite
+			// 
+			this.mnuExtjsWebsite.Name = "mnuExtjsWebsite";
+			this.mnuExtjsWebsite.Size = new System.Drawing.Size(247, 22);
+			this.mnuExtjsWebsite.Text = "Visit the Ext JS website";
+			this.mnuExtjsWebsite.Click += new System.EventHandler(this.mnuExtjsWebsite_Click);
+			// 
+			// toolStripSeparator5
+			// 
+			this.toolStripSeparator5.Name = "toolStripSeparator5";
+			this.toolStripSeparator5.Size = new System.Drawing.Size(258, 6);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1153,6 +1169,8 @@ namespace JSBuild
         private System.Windows.Forms.ToolStripMenuItem mnRemove;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem mnAdd;
+		private System.Windows.Forms.ToolStripMenuItem mnuExtjsWebsite;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
 
     }
 }

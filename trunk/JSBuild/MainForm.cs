@@ -183,8 +183,11 @@ namespace JSBuild
 					FileInfo[] matches = GetFiles(dir, pattern);
 					if (matches.Length > 0)
 					{
+						//BPM: changed logic to grab ub first so the insert is at the correct index after resize
+						//      to fix crash bug anytime more than one file type was matched separately in the same dir
+						int ub = files.GetUpperBound(0);
 						Array.Resize(ref files, files.Length + matches.Length);
-						matches.CopyTo(files, (files[0] == null ? 0 : files.GetUpperBound(0)));
+						matches.CopyTo(files, (files[0] == null ? 0 : ub + 1));
 					}
 				}
 			}
@@ -377,16 +380,27 @@ namespace JSBuild
 
         private void mnWebSite_Click(object sender, EventArgs e)
         {
+			LaunchWebsite("http://code.google.com/p/js-builder/");
+        }
+
+		private void mnuExtjsWebsite_Click(object sender, EventArgs e)
+		{
+			LaunchWebsite("http://www.extjs.com/");
+		}
+
+		private void LaunchWebsite(string url)
+		{
 			try
 			{
 				//This will attempt to use the system default browser
-				System.Diagnostics.Process.Start("http://www.jackslocum.com/");
+				System.Diagnostics.Process.Start(url);
 			}
 			catch
 			{
-				MessageBox.Show("There was a problem starting your web browser.", "JS Builder", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				MessageBox.Show("There was a problem starting your web browser.", "JS Builder", 
+					MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
-        }
+		}
 
         protected DialogResult SaveProject()
         {
@@ -399,7 +413,9 @@ namespace JSBuild
                 }
                 else
                 {
-                    DialogResult res = MessageBox.Show("Save Changes to " + project.Name+ "?", "Save Project?", MessageBoxButtons.YesNoCancel);
+                    DialogResult res = MessageBox.Show("Save Changes to " + project.Name+ "?", "Save Project?", 
+						MessageBoxButtons.YesNoCancel);
+
                     if(res == DialogResult.OK)
                     {
                         project.Save();

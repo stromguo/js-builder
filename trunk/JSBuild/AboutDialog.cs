@@ -31,7 +31,7 @@ namespace JSBuild
 		{
 			get
 			{
-				return "Contributors: Brian Moeskau, Roger R. Smith";
+				return "Contributors: Jack Slocum, Brian Moeskau, Roger R. Smith";
 			}
 		}
         public string AssemblyTitle
@@ -124,7 +124,7 @@ namespace JSBuild
 			try
 			{
 				//This will attempt to use the system default browser
-				System.Diagnostics.Process.Start("http://www.jackslocum.com/");
+				System.Diagnostics.Process.Start("http://code.google.com/p/js-builder/");
 			}
 			catch
 			{
