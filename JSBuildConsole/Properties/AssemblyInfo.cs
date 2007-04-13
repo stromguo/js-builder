@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("JSBuildConsole")]
 [assembly: AssemblyDescription("JS Builder Console App")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Jack Slocum")]
+[assembly: AssemblyCompany("Ext JS, LLC")]
 [assembly: AssemblyProduct("JS Builder")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("2006-2007 Ext JS, LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

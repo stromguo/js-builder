@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("JS Builder")]
 [assembly: AssemblyDescription("Javascript minification and file consolidation")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Jack Slocum")]
+[assembly: AssemblyCompany("Ext JS, LLC")]
 [assembly: AssemblyProduct("JS Builder")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("2006-2007 Ext JS, LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.1.2.0")]
+[assembly: AssemblyFileVersion("1.1.2.0")]
