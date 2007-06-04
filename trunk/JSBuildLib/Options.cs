@@ -21,7 +21,7 @@ namespace JSBuild
 		private const bool defaultAutoSave = true;
 		private const bool defaultAutoCalc = false;
         private const bool defaultClearOutputDir = false;
-        private const int maxRecentProjects = 5;
+        private const int maxRecentProjects = 10;
 
 		private static Options instance = new Options();
 
