@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Configuration;
+using System.Collections;
 //using System.Windows.Forms;
 
 namespace JSBuild
@@ -20,6 +21,7 @@ namespace JSBuild
 		private const bool defaultAutoSave = true;
 		private const bool defaultAutoCalc = false;
         private const bool defaultClearOutputDir = false;
+        private const int maxRecentProjects = 5;
 
 		private static Options instance = new Options();
 
@@ -144,6 +146,32 @@ namespace JSBuild
         {
             get { return clearOutputDir; }
             set { clearOutputDir = value; }
+        }
+
+        private ArrayList recentProjects = new ArrayList(maxRecentProjects);
+        public ArrayList RecentProjects
+        {
+            get {   return recentProjects; }
+            set { recentProjects = value; }
+        }
+
+        public void AddRecentProject(object value)
+        {
+            if (!RecentProjects.Contains(value))
+            {
+                if (RecentProjects.Count == maxRecentProjects)
+                {
+                    //recentProjects.RemoveAt(maxRecentProjects);
+                    ArrayList tempRecentProjects = RecentProjects.GetRange(0, maxRecentProjects - 1);
+                    RecentProjects = new ArrayList();
+                    RecentProjects.AddRange(tempRecentProjects);
+                }
+            }
+            else
+            {
+                RecentProjects.Remove(value);
+            }
+            RecentProjects.Insert(0, value);
         }
     }
 }

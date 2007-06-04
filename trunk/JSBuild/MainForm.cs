@@ -42,6 +42,8 @@ namespace JSBuild
                     LoadProject();
                 }
             }
+
+            LoadRecentItems();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -275,6 +277,7 @@ namespace JSBuild
 
         private void LoadProject()
         {
+            AddToRecentItems();
             LoadFiles();
             form.Enabled = true;
             tbSave.Enabled = true;
@@ -777,5 +780,47 @@ namespace JSBuild
 				}
 			}
 		}
+
+        private void AddToRecentItems()
+        {
+            Options.GetInstance().AddRecentProject(project.FileName);
+            Options.GetInstance().Save(Application.ExecutablePath);
+            LoadRecentItems();
+        }
+        private void LoadRecentItems()
+        {
+            if (Options.GetInstance().RecentProjects != null && Options.GetInstance().RecentProjects.Count > 0)
+            {
+                this.mnRecentProjects.DropDownItems.Clear();
+                foreach (string projectName in Options.GetInstance().RecentProjects)
+                {
+                    ToolStripMenuItem tsi = new ToolStripMenuItem();
+                    tsi.Text = projectName;
+                    tsi.Click += new EventHandler(tsi_Click);
+                    this.mnRecentProjects.DropDownItems.Add(tsi);
+                }
+                    
+            }
+        }
+
+        void tsi_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender != null)
+                {
+                    string projectName = sender.ToString();
+                    Options.GetInstance().LastProject = projectName;
+                    project.Load(Application.ExecutablePath, projectName);
+                    LoadProject();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Project File Name has incorrect format.", "JS Builder");
+            }
+        }
+
+        
     }
 }
