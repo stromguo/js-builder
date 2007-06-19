@@ -147,7 +147,7 @@ namespace JSBuild
 		{
 			Console.Out.WriteLine("\nJS Builder Console " + 
 				System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() +
-				"\nby Jack Slocum (http://www.jackslocum.com)");
+				"\nby Jack Slocum (http://www.extjs.com/)");
 
 			Console.Out.WriteLine("\nThe JS Builder Console performs command line builds of JS Builder");
 			Console.Out.WriteLine("project files.  You must supply the path to an existing .jsb file");
